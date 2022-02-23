@@ -1,0 +1,431 @@
+extends TextureRect
+
+
+export(int) var card_rows := 2
+export(int) var card_columns := 3
+export(PackedScene) var CardScene: PackedScene
+export(NodePath) onready var deck_list_card_drag_to_container = get_node(deck_list_card_drag_to_container) as Container
+export(NodePath) onready var grid = get_node(grid) as GridContainer
+export(NodePath) onready var current_page = get_node(current_page) as Label
+export(NodePath) onready var total_pages = get_node(total_pages) as Label
+export(NodePath) onready var left = get_node(left) as Button
+export(NodePath) onready var right = get_node(right) as Button
+export(NodePath) onready var preview = get_node(preview) as Preview
+export(NodePath) onready var export_for_cardnum = get_node(export_for_cardnum) as ExportCardnumPopup
+export(NodePath) onready var import_from_cardnum = get_node(import_from_cardnum) as ImportCardnumPopup
+export(NodePath) onready var confirm_clear_deck = get_node(confirm_clear_deck) as Popup
+export(NodePath) onready var search_by_name = get_node(search_by_name) as LineEdit
+export(NodePath) onready var search_by_text = get_node(search_by_text) as LineEdit
+export(NodePath) onready var search_by_quote = get_node(search_by_quote) as LineEdit
+export(NodePath) onready var filter_by_set = get_node(filter_by_set) as OptionButton
+export(NodePath) onready var filter_by_type = get_node(filter_by_type) as OptionButton
+
+export(NodePath) onready var resources = get_node(resources) as DeckSection
+export(NodePath) onready var hazards = get_node(hazards) as DeckSection
+export(NodePath) onready var sideboard = get_node(sideboard) as DeckSection
+export(NodePath) onready var characters = get_node(characters) as DeckSection
+export(NodePath) onready var pool = get_node(pool) as DeckSection
+export(NodePath) onready var fw_dc_sb = get_node(fw_dc_sb) as DeckSection
+export(NodePath) onready var sites = get_node(sites) as DeckSection
+
+onready var sections = [
+	resources,
+	hazards,
+	sideboard,
+	characters,
+	pool,
+	fw_dc_sb,
+	sites,
+]
+
+onready var cards_per_page := float(card_rows * card_columns)
+var ALL_DATA: Array = load_json_file('res://cards.json')
+var data: Array
+var total_cards: int
+var cur: int
+var cur_section: DeckSection
+var clearing_filters := false
+
+func _ready() -> void:
+	texture = Global.get_texture_from_cards_pck('background.png')
+	set_drag_forwarding_recursively(deck_list_card_drag_to_container)
+	grid.columns = card_columns
+	initialize_grid()
+	cur_section = resources
+	cur_section.toggle_highlight()
+	reset()
+
+
+func set_drag_forwarding_recursively(control: Control) -> void:
+	for child in control.get_children():
+		if child is Control:
+			child.set_drag_forwarding(self)
+			set_drag_forwarding_recursively(child)
+
+
+func reset() -> void:
+	data = ALL_DATA
+	clearing_filters = true
+	search_by_name.clear()
+	search_by_text.clear()
+	search_by_quote.clear()
+	filter_by_set.select(0)
+	filter_by_type.select(0)
+	search_by_name.grab_focus()
+	show_results()
+	clearing_filters = false
+
+
+func show_results() -> void:
+	cur = 0
+	total_cards = data.size()
+	left.disabled = true
+	populate_grid_textures()
+	total_pages.text = str(max(ceil(total_cards / cards_per_page), 1))
+	update_current_page_number()
+
+
+func update_current_page_number() -> void:
+	current_page.text = str(cur / cards_per_page + 1)
+
+
+func initialize_grid() -> void:
+	var container_aspect := Global.CARD_ASPECT
+	for spot in cards_per_page:
+		var container = AspectRatioContainer.new()
+		container.ratio = container_aspect
+		container.size_flags_horizontal = SIZE_EXPAND_FILL
+		container.size_flags_vertical = SIZE_EXPAND_FILL
+		container.set_drag_forwarding(self)
+		var card = CardScene.instance() as Card
+		card.spot = spot
+		container.add_child(card)
+		grid.add_child(container)
+		card.connect("add_card", self, "_on_Card_add_card", [card])
+		card.connect("mouse_entered", self, "_on_Card_mouse_entered", [card])
+		card.connect("mouse_exited", self, "_on_Card_mouse_exited")
+		card.connect("dropped", self, "_on_Card_dropped")
+
+
+func populate_grid_textures() -> void:
+	for spot in cards_per_page:
+		var card = grid.get_child(spot).get_child(0) as Card
+		var previewing_this_spot = preview.spot == card.spot
+		# check to see if we're out of results
+		if cur + spot < total_cards:
+			var card_data = data[cur + spot]
+			card.data = card_data
+			card.texture = Global.get_texture_from_data(card_data)
+			card.previewable = true
+			if previewing_this_spot:
+				preview.visible = true
+				preview.texture = card.texture
+		else:
+			card.data = {}
+			card.texture = null
+			card.previewable = false
+			if previewing_this_spot:
+				preview.hide()
+	right.disabled = cur + cards_per_page >= total_cards
+
+
+func can_drop_data(_position: Vector2, dd: Dictionary) -> bool:
+	return can_drop_data_check(dd)
+
+
+func can_drop_data_fw(_position: Vector2, dd: Dictionary, _from_control: Control) -> bool:
+	return can_drop_data_check(dd)
+
+
+func can_drop_data_check(dd: Dictionary) -> bool:
+	return dd.type == "deck_list_card"
+
+
+func drop_data(_position: Vector2, dd: Dictionary) -> void:
+	drop_data_logic(dd)
+
+
+func drop_data_fw(_position: Vector2, dd: Dictionary, _from_control: Control) -> void:
+	drop_data_logic(dd)
+
+
+func drop_data_logic(dd: Dictionary) -> void:
+	cur_section.cards[dd.index].decrement_count()
+
+
+func load_json_file(path):
+	"""Loads a JSON file from the given res path and return the loaded JSON object."""
+	var file = File.new()
+	file.open(path, file.READ)
+	var text = file.get_as_text()
+	var result_json = JSON.parse(text)
+	if result_json.error == OK:
+		var obj = result_json.result
+		return obj
+	else:
+		push_error("yikers!")
+
+
+func show_preview(card: Control, texture: Texture, left_only: bool, spot := -1) -> void:
+	if not Global.dragging_something:
+		preview.setup(card, texture, left_only, spot)
+		preview.visible = true
+
+
+func _on_Card_mouse_entered(card: Card) -> void:
+	if card.previewable:
+		show_preview(card, card.texture, false, card.spot)
+
+
+func _on_Card_mouse_exited() -> void:
+	preview.hide()
+	preview.spot = -1
+
+
+func _on_DeckSection_preview(card, texture) -> void:
+	show_preview(card, texture, true)
+
+
+func _on_DeckSection_end_preview() -> void:
+	preview.hide()
+
+
+func _on_Card_add_card(card: Card) -> void:
+	preview.hide()
+	cur_section.add_card(card.data)
+
+
+func _on_Card_dropped(dd: Dictionary) -> void:
+	drop_data_logic(dd)
+
+
+func _on_Left_pressed() -> void:
+	cur -= int(cards_per_page)
+	update_current_page_number()
+	if cur <= 0:
+		left.disabled = true
+	if cur + cards_per_page < total_cards:
+		right.disabled = false
+	populate_grid_textures()
+
+
+func _on_Right_pressed() -> void:
+	cur += int(cards_per_page)
+	update_current_page_number()
+	if cur > 0:
+		left.disabled = false
+	if cur + cards_per_page >= total_cards:
+		right.disabled = true
+	populate_grid_textures()
+
+
+func _on_DeckBuilder_gui_input(event: InputEvent) -> void:
+	if event.is_action_pressed("ui_right") and not right.disabled:
+		_on_Right_pressed()
+	elif event.is_action_pressed("ui_left") and not left.disabled:
+		_on_Left_pressed()
+
+
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed("add_card"):
+		Global.dragging_something = true
+	elif event.is_action_released("add_card"):
+		Global.dragging_something = false
+
+
+func _on_FullScreen_pressed() -> void:
+	OS.window_fullscreen = not OS.window_fullscreen
+	search_by_name.grab_focus()
+
+#Example of card data:
+#{
+#  Alignment:Hero,
+#  Artist:David Deitrick,
+#  Body:6,
+#  Corruption:,
+#  DCpath:Wizards/Adrazar.jpg,
+#  Direct:1,
+#  Gear:,
+#  General:Null,
+#  GoldRing:,
+#  GreaterItem:,
+#  Haven:,
+#  Hoard:,
+#  Home:Dol Amroth ,
+#  ImageName:metw_adrazar.jpg,
+#  Information:,
+#  MEID:TW006,
+#  MPs:1,
+#  MajorItem:,
+#  Mind:3,
+#  MinorItem:,
+#  NameDU:Adrazar,
+#  NameEN:Adrazar,
+#  NameFN:Adrazar,
+#  NameFR:Adrazar,
+#  NameGR:Adrazar,
+#  NameIT:Adrazar,
+#  NameJP:アドラザール,
+#  NameSP:Adrazar,
+#  Non:,
+#  Palantiri:,
+#  Path:,
+#  Playable:,
+#  Precise:F1,
+#  Primary:Character,
+#  Prowess:3,
+#  RPath:,
+#  RWMPs:,
+#  Race:Dúnadan,
+#  Rarity:Fixed,
+#  Region:,
+#  Scroll:,
+#  Secondary:character,
+#  Set:METW,
+#  Site:,
+#  Skill:Scout Diplomat,
+#  Specific:,
+#  Stage:Null,
+#  Strikes:Null,
+#  Text:Unique. +1 direct influence against all factions.  "He encouraged all men of worth from near or far to enter his service,
+#  and to those who proved trustworthy he gave rank and reward."-LotR  Home Site: Dol Amroth,
+#  Unique:unique,
+#  code:(TW),
+#  codeFR:0,
+#  codeGR:0,
+#  codeJP:アドラザール,
+#  codeSP:0,
+#  dreamcard:False,
+#  erratum:False,
+#  extras:False,
+#  fullCode:Adrazar (TW),
+#  gccgAlign:,
+#  gccgSet:(TW),
+#  ice_errata:Null,
+#  normalizedtitle:adrazar,
+#  released:True
+#}
+func run_query(node_to_focus: LineEdit = null) -> void:
+	var name_query = "*" + search_by_name.text.strip_edges().to_lower() + "*"
+	var text_query = "*" + search_by_text.text.strip_edges().to_lower() + "*"
+	var quote_query = "*" + search_by_quote.text.strip_edges().to_lower() + "*"
+	data = []
+	for card in ALL_DATA:
+		var card_text: Array = (card.Text as String).split('  \"', false, 1)
+		var text: String = card_text[0]
+		var quote: String = card_text[1] if card_text.size() > 1 else "*"
+		if card.Set.matchn(filter_by_set.get_item_metadata(filter_by_set.selected)) \
+			and card.Primary.matchn(filter_by_type.get_item_metadata(filter_by_type.selected)) \
+			and card.normalizedtitle.matchn(name_query) \
+			and text.matchn(text_query) \
+			and quote.matchn(quote_query) \
+			:
+			data.append(card)
+	if node_to_focus:
+		node_to_focus.select_all()
+	show_results()
+
+func _on_Name_text_entered(_new_text: String) -> void:
+	run_query(search_by_name)
+
+
+func _on_Text_text_entered(_new_text: String) -> void:
+	run_query(search_by_text)
+
+
+func _on_Quote_text_entered(_new_text: String) -> void:
+	run_query(search_by_quote)
+
+
+func _on_Set_item_selected(_index: int) -> void:
+	run_query()
+
+
+func _on_Type_item_selected(_index: int) -> void:
+	run_query()
+
+
+func _on_ClearFiltersButton_pressed() -> void:
+	reset()
+
+
+func set_cur_section(section: DeckSection) -> void:
+	cur_section.toggle_highlight()
+	cur_section = section
+	cur_section.toggle_highlight()
+
+
+func _on_DeckSection_switch_tab_and_drop(drop_data) -> void:
+	if not drop_data.has('Primary'):
+		return
+
+	match drop_data.Primary:
+		"Character":
+			set_cur_section(characters)
+		"Resource":
+			set_cur_section(resources)
+		"Hazard":
+			set_cur_section(hazards)
+		"Site":
+			set_cur_section(sites)
+	cur_section.add_card(drop_data)
+
+
+func _on_ExportForCardnum_pressed() -> void:
+	for tab in sections:
+		export_for_cardnum.set_decklist(tab.name, tab.get_list())
+	export_for_cardnum.popup_centered_ratio()
+
+
+func _on_ImportFromCardnum_pressed() -> void:
+	import_from_cardnum.clear()
+	import_from_cardnum.popup_centered_ratio()
+
+
+func _on_ImportCardnumPopup_import(deck: Dictionary) -> void:
+	for tab in sections:
+		tab.set_list(ALL_DATA, deck[tab.name])
+
+
+func _on_DeckBuilder_resized() -> void:
+	for popup in [export_for_cardnum, import_from_cardnum]:
+		if is_instance_valid(popup) and popup.visible:
+			popup.popup_centered_ratio()
+			break
+
+
+func _on_DeckSection_count_changed(section: DeckSection, _card: DeckListCard, _change: int) -> void:
+	# TODO deal with num_copies constraints across sections?
+	set_cur_section(section)
+
+
+func _on_DeckSection_highlight(section) -> void:
+	set_cur_section(section)
+
+
+func _on_ClearDeck_pressed() -> void:
+	confirm_clear_deck.popup()
+
+
+func _on_ConfirmClearDeck_confirmed() -> void:
+	clear_deck()
+
+
+func clear_deck() -> void:
+	for section in sections:
+		section.reset_state()
+
+
+func _on_Name_text_changed(new_text: String) -> void:
+	if new_text.empty() and not clearing_filters:
+		run_query(search_by_name)
+
+
+func _on_Text_text_changed(new_text):
+	if new_text.empty() and not clearing_filters:
+		run_query(search_by_text)
+
+
+func _on_Quote_text_changed(new_text):
+	if new_text.empty() and not clearing_filters:
+		run_query(search_by_quote)

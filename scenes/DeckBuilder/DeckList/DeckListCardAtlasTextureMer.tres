@@ -1,0 +1,5 @@
+[gd_resource type="AtlasTexture" format=2]
+
+[resource]
+resource_local_to_scene = true
+region = Rect2( 36.9819, 38.5377, 488.772, 64.2854 )

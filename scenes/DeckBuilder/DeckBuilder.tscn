@@ -1,0 +1,623 @@
+[gd_scene load_steps=11 format=2]
+
+[ext_resource path="res://scenes/DeckBuilder/DeckBuilder.gd" type="Script" id=2]
+[ext_resource path="res://scenes/DeckBuilder/Preview.tscn" type="PackedScene" id=3]
+[ext_resource path="res://scenes/DeckBuilder/Gallery/Card.tscn" type="PackedScene" id=4]
+[ext_resource path="res://scenes/DeckBuilder/Filters/Set.gd" type="Script" id=5]
+[ext_resource path="res://scenes/DeckBuilder/Filters/Type.gd" type="Script" id=6]
+[ext_resource path="res://scenes/DeckBuilder/DeckList/DeckSection.tscn" type="PackedScene" id=7]
+[ext_resource path="res://scenes/DeckBuilder/Cardnum/ExportCardnumPopup.tscn" type="PackedScene" id=8]
+[ext_resource path="res://scenes/DeckBuilder/DeckList/DeckListCardFont.tres" type="DynamicFont" id=9]
+[ext_resource path="res://scenes/DeckBuilder/Cardnum/ImportCardnumPopup.tscn" type="PackedScene" id=10]
+[ext_resource path="res://scenes/DeckBuilder/DeckBuilderTheme.tres" type="Theme" id=11]
+
+[node name="DeckBuilder" type="TextureRect"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource( 11 )
+expand = true
+stretch_mode = 7
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false,
+"_editor_description_": ""
+}
+CardScene = ExtResource( 4 )
+deck_list_card_drag_to_container = NodePath("MainContainer/HBoxContainer/Finder")
+grid = NodePath("MainContainer/HBoxContainer/Finder/VBoxContainer/Gallery/HBoxContainer/CardGrid")
+current_page = NodePath("MainContainer/HBoxContainer/Finder/VBoxContainer/PanelContainer/PageLabels/Current")
+total_pages = NodePath("MainContainer/HBoxContainer/Finder/VBoxContainer/PanelContainer/PageLabels/Total")
+left = NodePath("MainContainer/HBoxContainer/Finder/VBoxContainer/Gallery/HBoxContainer/Left")
+right = NodePath("MainContainer/HBoxContainer/Finder/VBoxContainer/Gallery/HBoxContainer/Right")
+preview = NodePath("Preview")
+export_for_cardnum = NodePath("ExportCardnumPopup")
+import_from_cardnum = NodePath("ImportCardnumPopup")
+confirm_clear_deck = NodePath("ConfirmClearDeck")
+search_by_name = NodePath("MainContainer/HBoxContainer/Finder/Filters/Primary/HBoxContainer/Name")
+search_by_text = NodePath("MainContainer/HBoxContainer/Finder/Filters/Primary/HBoxContainer/Text")
+search_by_quote = NodePath("MainContainer/HBoxContainer/Finder/Filters/Primary/HBoxContainer/Quote")
+filter_by_set = NodePath("MainContainer/HBoxContainer/Finder/Filters/Primary/HBoxContainer/Set")
+filter_by_type = NodePath("MainContainer/HBoxContainer/Finder/Filters/Primary/HBoxContainer/Type")
+resources = NodePath("MainContainer/HBoxContainer/DeckList/Sections/Top/Resources")
+hazards = NodePath("MainContainer/HBoxContainer/DeckList/Sections/Top/Hazards")
+sideboard = NodePath("MainContainer/HBoxContainer/DeckList/Sections/Top/Sideboard")
+characters = NodePath("MainContainer/HBoxContainer/DeckList/Sections/Bottom/Characters")
+pool = NodePath("MainContainer/HBoxContainer/DeckList/Sections/Bottom/Pool")
+fw_dc_sb = NodePath("MainContainer/HBoxContainer/DeckList/Sections/Bottom/VBoxContainer/FW-DC-SB")
+sites = NodePath("MainContainer/HBoxContainer/DeckList/Sections/Bottom/VBoxContainer/Sites")
+
+[node name="MainContainer" type="MarginContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MainContainer"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 1590.0
+margin_bottom = 890.0
+size_flags_vertical = 3
+size_flags_stretch_ratio = 20.0
+custom_constants/separation = 20
+
+[node name="Finder" type="VBoxContainer" parent="MainContainer/HBoxContainer"]
+margin_right = 768.0
+margin_bottom = 880.0
+size_flags_horizontal = 3
+
+[node name="Filters" type="VBoxContainer" parent="MainContainer/HBoxContainer/Finder"]
+margin_right = 768.0
+margin_bottom = 38.0
+
+[node name="Primary" type="MarginContainer" parent="MainContainer/HBoxContainer/Finder/Filters"]
+margin_right = 768.0
+margin_bottom = 34.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MainContainer/HBoxContainer/Finder/Filters/Primary"]
+margin_right = 768.0
+margin_bottom = 34.0
+
+[node name="Name" type="LineEdit" parent="MainContainer/HBoxContainer/Finder/Filters/Primary/HBoxContainer"]
+margin_right = 126.0
+margin_bottom = 34.0
+size_flags_horizontal = 3
+clear_button_enabled = true
+placeholder_text = "by Name"
+
+[node name="Text" type="LineEdit" parent="MainContainer/HBoxContainer/Finder/Filters/Primary/HBoxContainer"]
+margin_left = 130.0
+margin_right = 256.0
+margin_bottom = 34.0
+size_flags_horizontal = 3
+clear_button_enabled = true
+placeholder_text = "by Text"
+
+[node name="Quote" type="LineEdit" parent="MainContainer/HBoxContainer/Finder/Filters/Primary/HBoxContainer"]
+margin_left = 260.0
+margin_right = 386.0
+margin_bottom = 34.0
+size_flags_horizontal = 3
+clear_button_enabled = true
+placeholder_text = "by Quote"
+
+[node name="Set" type="OptionButton" parent="MainContainer/HBoxContainer/Finder/Filters/Primary/HBoxContainer"]
+margin_left = 390.0
+margin_right = 516.0
+margin_bottom = 34.0
+size_flags_horizontal = 3
+text = "All Sets"
+script = ExtResource( 5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Type" type="OptionButton" parent="MainContainer/HBoxContainer/Finder/Filters/Primary/HBoxContainer"]
+margin_left = 520.0
+margin_right = 646.0
+margin_bottom = 34.0
+size_flags_horizontal = 3
+text = "All Types"
+script = ExtResource( 6 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ClearFiltersButton" type="Button" parent="MainContainer/HBoxContainer/Finder/Filters/Primary/HBoxContainer"]
+margin_left = 650.0
+margin_right = 768.0
+margin_bottom = 34.0
+rect_min_size = Vector2( 0, 34 )
+text = "Clear Filters"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Secondary" type="MarginContainer" parent="MainContainer/HBoxContainer/Finder/Filters"]
+margin_top = 38.0
+margin_right = 768.0
+margin_bottom = 38.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MainContainer/HBoxContainer/Finder"]
+margin_top = 42.0
+margin_right = 768.0
+margin_bottom = 880.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 3.0
+
+[node name="Gallery" type="MarginContainer" parent="MainContainer/HBoxContainer/Finder/VBoxContainer"]
+margin_right = 768.0
+margin_bottom = 800.0
+grow_horizontal = 0
+grow_vertical = 0
+size_flags_vertical = 3
+custom_constants/margin_right = 20
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MainContainer/HBoxContainer/Finder/VBoxContainer/Gallery"]
+margin_right = 748.0
+margin_bottom = 800.0
+custom_constants/separation = 0
+
+[node name="Left" type="Button" parent="MainContainer/HBoxContainer/Finder/VBoxContainer/Gallery/HBoxContainer"]
+margin_top = 375.0
+margin_right = 25.0
+margin_bottom = 425.0
+rect_min_size = Vector2( 25, 50 )
+size_flags_horizontal = 0
+size_flags_vertical = 4
+disabled = true
+text = "<"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CardGrid" type="GridContainer" parent="MainContainer/HBoxContainer/Finder/VBoxContainer/Gallery/HBoxContainer"]
+margin_left = 25.0
+margin_right = 723.0
+margin_bottom = 800.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/vseparation = 10
+custom_constants/hseparation = 10
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Right" type="Button" parent="MainContainer/HBoxContainer/Finder/VBoxContainer/Gallery/HBoxContainer"]
+margin_left = 723.0
+margin_top = 375.0
+margin_right = 748.0
+margin_bottom = 425.0
+rect_min_size = Vector2( 25, 50 )
+size_flags_horizontal = 0
+size_flags_vertical = 4
+text = ">"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PanelContainer" type="PanelContainer" parent="MainContainer/HBoxContainer/Finder/VBoxContainer"]
+margin_left = 327.0
+margin_top = 804.0
+margin_right = 440.0
+margin_bottom = 838.0
+size_flags_horizontal = 4
+size_flags_vertical = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PageLabels" type="HBoxContainer" parent="MainContainer/HBoxContainer/Finder/VBoxContainer/PanelContainer"]
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 108.0
+margin_bottom = 29.0
+size_flags_horizontal = 4
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Page" type="Label" parent="MainContainer/HBoxContainer/Finder/VBoxContainer/PanelContainer/PageLabels"]
+margin_right = 36.0
+margin_bottom = 24.0
+size_flags_horizontal = 4
+text = "Page"
+
+[node name="Current" type="Label" parent="MainContainer/HBoxContainer/Finder/VBoxContainer/PanelContainer/PageLabels"]
+margin_left = 40.0
+margin_top = 5.0
+margin_right = 48.0
+margin_bottom = 18.0
+size_flags_horizontal = 4
+custom_fonts/font = ExtResource( 9 )
+text = "1"
+
+[node name="Of" type="Label" parent="MainContainer/HBoxContainer/Finder/VBoxContainer/PanelContainer/PageLabels"]
+margin_left = 52.0
+margin_right = 70.0
+margin_bottom = 24.0
+size_flags_horizontal = 4
+text = "of"
+
+[node name="Total" type="Label" parent="MainContainer/HBoxContainer/Finder/VBoxContainer/PanelContainer/PageLabels"]
+margin_left = 74.0
+margin_top = 5.0
+margin_right = 103.0
+margin_bottom = 18.0
+size_flags_horizontal = 4
+custom_fonts/font = ExtResource( 9 )
+text = "201"
+
+[node name="VSeparator" type="VSeparator" parent="MainContainer/HBoxContainer"]
+modulate = Color( 0, 0, 0, 0 )
+margin_left = 788.0
+margin_right = 792.0
+margin_bottom = 880.0
+
+[node name="DeckList" type="MarginContainer" parent="MainContainer/HBoxContainer"]
+margin_left = 812.0
+margin_right = 1580.0
+margin_bottom = 880.0
+size_flags_horizontal = 3
+
+[node name="Sections" type="VBoxContainer" parent="MainContainer/HBoxContainer/DeckList"]
+margin_right = 768.0
+margin_bottom = 880.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/separation = 0
+
+[node name="SectionButtons" type="HBoxContainer" parent="MainContainer/HBoxContainer/DeckList/Sections"]
+margin_right = 768.0
+margin_bottom = 34.0
+custom_constants/separation = 10
+alignment = 1
+
+[node name="ImportFromCardnum" type="Button" parent="MainContainer/HBoxContainer/DeckList/Sections/SectionButtons"]
+margin_right = 184.0
+margin_bottom = 34.0
+rect_min_size = Vector2( 0, 32 )
+size_flags_horizontal = 0
+text = "Import from Cardnum"
+
+[node name="ExportForCardnum" type="Button" parent="MainContainer/HBoxContainer/DeckList/Sections/SectionButtons"]
+margin_left = 194.0
+margin_right = 367.0
+margin_bottom = 34.0
+size_flags_horizontal = 0
+text = "Export for Cardnum"
+
+[node name="Import" type="Button" parent="MainContainer/HBoxContainer/DeckList/Sections/SectionButtons"]
+visible = false
+margin_left = 454.0
+margin_right = 519.0
+margin_bottom = 22.0
+text = "Import"
+
+[node name="Export" type="Button" parent="MainContainer/HBoxContainer/DeckList/Sections/SectionButtons"]
+visible = false
+margin_left = 492.0
+margin_right = 555.0
+margin_bottom = 22.0
+text = "Export"
+
+[node name="ClearDeck" type="Button" parent="MainContainer/HBoxContainer/DeckList/Sections/SectionButtons"]
+margin_left = 377.0
+margin_right = 478.0
+margin_bottom = 34.0
+size_flags_horizontal = 0
+text = "Clear Deck"
+
+[node name="MarginContainer" type="MarginContainer" parent="MainContainer/HBoxContainer/DeckList/Sections/SectionButtons"]
+margin_left = 488.0
+margin_right = 656.0
+margin_bottom = 34.0
+size_flags_horizontal = 3
+
+[node name="FullScreen" type="Button" parent="MainContainer/HBoxContainer/DeckList/Sections/SectionButtons"]
+margin_left = 666.0
+margin_right = 768.0
+margin_bottom = 34.0
+rect_min_size = Vector2( 0, 34 )
+size_flags_vertical = 0
+text = "FullScreen"
+
+[node name="MarginContainer" type="MarginContainer" parent="MainContainer/HBoxContainer/DeckList/Sections"]
+margin_top = 34.0
+margin_right = 768.0
+margin_bottom = 44.0
+rect_min_size = Vector2( 0, 10 )
+
+[node name="Top" type="HBoxContainer" parent="MainContainer/HBoxContainer/DeckList/Sections"]
+margin_top = 44.0
+margin_right = 768.0
+margin_bottom = 462.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/separation = 0
+
+[node name="Resources" parent="MainContainer/HBoxContainer/DeckList/Sections/Top" instance=ExtResource( 7 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 256.0
+margin_bottom = 418.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+primary = [ "Resource" ]
+
+[node name="Hazards" parent="MainContainer/HBoxContainer/DeckList/Sections/Top" instance=ExtResource( 7 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 256.0
+margin_right = 512.0
+margin_bottom = 418.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+primary = [ "Hazard" ]
+
+[node name="Sideboard" parent="MainContainer/HBoxContainer/DeckList/Sections/Top" instance=ExtResource( 7 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 512.0
+margin_right = 768.0
+margin_bottom = 418.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size = 30
+primary = [ "Character", "Resource", "Hazard" ]
+
+[node name="Bottom" type="HBoxContainer" parent="MainContainer/HBoxContainer/DeckList/Sections"]
+margin_top = 462.0
+margin_right = 768.0
+margin_bottom = 880.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/separation = 0
+
+[node name="Characters" parent="MainContainer/HBoxContainer/DeckList/Sections/Bottom" instance=ExtResource( 7 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 256.0
+margin_bottom = 418.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size = 13
+primary = [ "Character" ]
+
+[node name="Pool" parent="MainContainer/HBoxContainer/DeckList/Sections/Bottom" instance=ExtResource( 7 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 256.0
+margin_right = 512.0
+margin_bottom = 418.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size = 20
+primary = [ "Character", "Resource" ]
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MainContainer/HBoxContainer/DeckList/Sections/Bottom"]
+margin_left = 512.0
+margin_right = 768.0
+margin_bottom = 418.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="FW-DC-SB" parent="MainContainer/HBoxContainer/DeckList/Sections/Bottom/VBoxContainer" instance=ExtResource( 7 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 256.0
+margin_bottom = 207.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size = 10
+primary = [ "Character", "Resource", "Hazard" ]
+
+[node name="Sites" parent="MainContainer/HBoxContainer/DeckList/Sections/Bottom/VBoxContainer" instance=ExtResource( 7 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 211.0
+margin_right = 256.0
+margin_bottom = 418.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+primary = [ "Site" ]
+
+[node name="Preview" parent="." instance=ExtResource( 3 )]
+visible = false
+
+[node name="ExportCardnumPopup" parent="." instance=ExtResource( 8 )]
+margin_top = -446.5
+margin_bottom = 446.5
+
+[node name="ImportCardnumPopup" parent="." instance=ExtResource( 10 )]
+margin_top = -446.5
+margin_bottom = 446.5
+
+[node name="ConfirmClearDeck" type="ConfirmationDialog" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -106.5
+margin_top = -50.0
+margin_right = 228.5
+margin_bottom = 50.0
+dialog_text = "Are you sure you want to clear your deck?
+
+This cannot be undone!"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Import" type="WindowDialog" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -299.0
+margin_top = -199.0
+margin_right = 299.0
+margin_bottom = 199.0
+popup_exclusive = true
+window_title = "Import"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MarginContainer" type="MarginContainer" parent="Import"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_constants/margin_right = 20
+custom_constants/margin_top = 20
+custom_constants/margin_left = 20
+custom_constants/margin_bottom = 10
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Import/MarginContainer"]
+margin_left = 20.0
+margin_top = 20.0
+margin_right = 578.0
+margin_bottom = 388.0
+custom_constants/separation = 10
+
+[node name="TextEdit" type="TextEdit" parent="Import/MarginContainer/VBoxContainer"]
+margin_right = 558.0
+margin_bottom = 336.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+fold_gutter = true
+smooth_scrolling = true
+wrap_enabled = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Import" type="Button" parent="Import/MarginContainer/VBoxContainer"]
+margin_left = 246.0
+margin_top = 346.0
+margin_right = 311.0
+margin_bottom = 368.0
+size_flags_horizontal = 4
+text = "Import"
+
+[node name="Export" type="WindowDialog" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -299.0
+margin_top = -199.0
+margin_right = 299.0
+margin_bottom = 199.0
+popup_exclusive = true
+window_title = "Export"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MarginContainer" type="MarginContainer" parent="Export"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_constants/margin_right = 20
+custom_constants/margin_top = 20
+custom_constants/margin_left = 20
+custom_constants/margin_bottom = 10
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Export/MarginContainer"]
+margin_left = 20.0
+margin_top = 20.0
+margin_right = 578.0
+margin_bottom = 388.0
+custom_constants/separation = 10
+
+[node name="TextEdit" type="TextEdit" parent="Export/MarginContainer/VBoxContainer"]
+margin_right = 558.0
+margin_bottom = 336.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+readonly = true
+fold_gutter = true
+smooth_scrolling = true
+wrap_enabled = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Close" type="Button" parent="Export/MarginContainer/VBoxContainer"]
+margin_left = 246.0
+margin_top = 346.0
+margin_right = 311.0
+margin_bottom = 368.0
+size_flags_horizontal = 4
+text = "Close"
+
+[connection signal="gui_input" from="." to="." method="_on_DeckBuilder_gui_input"]
+[connection signal="resized" from="." to="." method="_on_DeckBuilder_resized"]
+[connection signal="text_changed" from="MainContainer/HBoxContainer/Finder/Filters/Primary/HBoxContainer/Name" to="." method="_on_Name_text_changed"]
+[connection signal="text_entered" from="MainContainer/HBoxContainer/Finder/Filters/Primary/HBoxContainer/Name" to="." method="_on_Name_text_entered"]
+[connection signal="text_changed" from="MainContainer/HBoxContainer/Finder/Filters/Primary/HBoxContainer/Text" to="." method="_on_Text_text_changed"]
+[connection signal="text_entered" from="MainContainer/HBoxContainer/Finder/Filters/Primary/HBoxContainer/Text" to="." method="_on_Text_text_entered"]
+[connection signal="text_changed" from="MainContainer/HBoxContainer/Finder/Filters/Primary/HBoxContainer/Quote" to="." method="_on_Quote_text_changed"]
+[connection signal="text_entered" from="MainContainer/HBoxContainer/Finder/Filters/Primary/HBoxContainer/Quote" to="." method="_on_Quote_text_entered"]
+[connection signal="item_selected" from="MainContainer/HBoxContainer/Finder/Filters/Primary/HBoxContainer/Set" to="." method="_on_Set_item_selected"]
+[connection signal="item_selected" from="MainContainer/HBoxContainer/Finder/Filters/Primary/HBoxContainer/Type" to="." method="_on_Type_item_selected"]
+[connection signal="pressed" from="MainContainer/HBoxContainer/Finder/Filters/Primary/HBoxContainer/ClearFiltersButton" to="." method="_on_ClearFiltersButton_pressed"]
+[connection signal="pressed" from="MainContainer/HBoxContainer/Finder/VBoxContainer/Gallery/HBoxContainer/Left" to="." method="_on_Left_pressed"]
+[connection signal="pressed" from="MainContainer/HBoxContainer/Finder/VBoxContainer/Gallery/HBoxContainer/Right" to="." method="_on_Right_pressed"]
+[connection signal="pressed" from="MainContainer/HBoxContainer/DeckList/Sections/SectionButtons/ImportFromCardnum" to="." method="_on_ImportFromCardnum_pressed"]
+[connection signal="pressed" from="MainContainer/HBoxContainer/DeckList/Sections/SectionButtons/ExportForCardnum" to="." method="_on_ExportForCardnum_pressed"]
+[connection signal="pressed" from="MainContainer/HBoxContainer/DeckList/Sections/SectionButtons/ClearDeck" to="." method="_on_ClearDeck_pressed"]
+[connection signal="pressed" from="MainContainer/HBoxContainer/DeckList/Sections/SectionButtons/FullScreen" to="." method="_on_FullScreen_pressed"]
+[connection signal="count_changed" from="MainContainer/HBoxContainer/DeckList/Sections/Top/Resources" to="." method="_on_DeckSection_count_changed"]
+[connection signal="end_preview" from="MainContainer/HBoxContainer/DeckList/Sections/Top/Resources" to="." method="_on_DeckSection_end_preview"]
+[connection signal="highlight" from="MainContainer/HBoxContainer/DeckList/Sections/Top/Resources" to="." method="_on_DeckSection_highlight"]
+[connection signal="preview" from="MainContainer/HBoxContainer/DeckList/Sections/Top/Resources" to="." method="_on_DeckSection_preview"]
+[connection signal="switch_tab_and_drop" from="MainContainer/HBoxContainer/DeckList/Sections/Top/Resources" to="." method="_on_DeckSection_switch_tab_and_drop"]
+[connection signal="count_changed" from="MainContainer/HBoxContainer/DeckList/Sections/Top/Hazards" to="." method="_on_DeckSection_count_changed"]
+[connection signal="end_preview" from="MainContainer/HBoxContainer/DeckList/Sections/Top/Hazards" to="." method="_on_DeckSection_end_preview"]
+[connection signal="highlight" from="MainContainer/HBoxContainer/DeckList/Sections/Top/Hazards" to="." method="_on_DeckSection_highlight"]
+[connection signal="preview" from="MainContainer/HBoxContainer/DeckList/Sections/Top/Hazards" to="." method="_on_DeckSection_preview"]
+[connection signal="switch_tab_and_drop" from="MainContainer/HBoxContainer/DeckList/Sections/Top/Hazards" to="." method="_on_DeckSection_switch_tab_and_drop"]
+[connection signal="count_changed" from="MainContainer/HBoxContainer/DeckList/Sections/Top/Sideboard" to="." method="_on_DeckSection_count_changed"]
+[connection signal="end_preview" from="MainContainer/HBoxContainer/DeckList/Sections/Top/Sideboard" to="." method="_on_DeckSection_end_preview"]
+[connection signal="highlight" from="MainContainer/HBoxContainer/DeckList/Sections/Top/Sideboard" to="." method="_on_DeckSection_highlight"]
+[connection signal="preview" from="MainContainer/HBoxContainer/DeckList/Sections/Top/Sideboard" to="." method="_on_DeckSection_preview"]
+[connection signal="switch_tab_and_drop" from="MainContainer/HBoxContainer/DeckList/Sections/Top/Sideboard" to="." method="_on_DeckSection_switch_tab_and_drop"]
+[connection signal="count_changed" from="MainContainer/HBoxContainer/DeckList/Sections/Bottom/Characters" to="." method="_on_DeckSection_count_changed"]
+[connection signal="end_preview" from="MainContainer/HBoxContainer/DeckList/Sections/Bottom/Characters" to="." method="_on_DeckSection_end_preview"]
+[connection signal="highlight" from="MainContainer/HBoxContainer/DeckList/Sections/Bottom/Characters" to="." method="_on_DeckSection_highlight"]
+[connection signal="preview" from="MainContainer/HBoxContainer/DeckList/Sections/Bottom/Characters" to="." method="_on_DeckSection_preview"]
+[connection signal="switch_tab_and_drop" from="MainContainer/HBoxContainer/DeckList/Sections/Bottom/Characters" to="." method="_on_DeckSection_switch_tab_and_drop"]
+[connection signal="count_changed" from="MainContainer/HBoxContainer/DeckList/Sections/Bottom/Pool" to="." method="_on_DeckSection_count_changed"]
+[connection signal="end_preview" from="MainContainer/HBoxContainer/DeckList/Sections/Bottom/Pool" to="." method="_on_DeckSection_end_preview"]
+[connection signal="highlight" from="MainContainer/HBoxContainer/DeckList/Sections/Bottom/Pool" to="." method="_on_DeckSection_highlight"]
+[connection signal="preview" from="MainContainer/HBoxContainer/DeckList/Sections/Bottom/Pool" to="." method="_on_DeckSection_preview"]
+[connection signal="switch_tab_and_drop" from="MainContainer/HBoxContainer/DeckList/Sections/Bottom/Pool" to="." method="_on_DeckSection_switch_tab_and_drop"]
+[connection signal="count_changed" from="MainContainer/HBoxContainer/DeckList/Sections/Bottom/VBoxContainer/FW-DC-SB" to="." method="_on_DeckSection_count_changed"]
+[connection signal="end_preview" from="MainContainer/HBoxContainer/DeckList/Sections/Bottom/VBoxContainer/FW-DC-SB" to="." method="_on_DeckSection_end_preview"]
+[connection signal="highlight" from="MainContainer/HBoxContainer/DeckList/Sections/Bottom/VBoxContainer/FW-DC-SB" to="." method="_on_DeckSection_highlight"]
+[connection signal="preview" from="MainContainer/HBoxContainer/DeckList/Sections/Bottom/VBoxContainer/FW-DC-SB" to="." method="_on_DeckSection_preview"]
+[connection signal="switch_tab_and_drop" from="MainContainer/HBoxContainer/DeckList/Sections/Bottom/VBoxContainer/FW-DC-SB" to="." method="_on_DeckSection_switch_tab_and_drop"]
+[connection signal="count_changed" from="MainContainer/HBoxContainer/DeckList/Sections/Bottom/VBoxContainer/Sites" to="." method="_on_DeckSection_count_changed"]
+[connection signal="end_preview" from="MainContainer/HBoxContainer/DeckList/Sections/Bottom/VBoxContainer/Sites" to="." method="_on_DeckSection_end_preview"]
+[connection signal="highlight" from="MainContainer/HBoxContainer/DeckList/Sections/Bottom/VBoxContainer/Sites" to="." method="_on_DeckSection_highlight"]
+[connection signal="preview" from="MainContainer/HBoxContainer/DeckList/Sections/Bottom/VBoxContainer/Sites" to="." method="_on_DeckSection_preview"]
+[connection signal="switch_tab_and_drop" from="MainContainer/HBoxContainer/DeckList/Sections/Bottom/VBoxContainer/Sites" to="." method="_on_DeckSection_switch_tab_and_drop"]
+[connection signal="import" from="ImportCardnumPopup" to="." method="_on_ImportCardnumPopup_import"]
+[connection signal="confirmed" from="ConfirmClearDeck" to="." method="_on_ConfirmClearDeck_confirmed"]

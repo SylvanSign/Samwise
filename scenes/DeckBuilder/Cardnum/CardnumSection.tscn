@@ -1,0 +1,49 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://scenes/DeckBuilder/Cardnum/CardnumSection.gd" type="Script" id=1]
+
+[node name="Resources" type="VBoxContainer"]
+margin_right = 530.0
+margin_bottom = 448.0
+size_flags_horizontal = 3
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Title" type="HBoxContainer" parent="."]
+margin_right = 530.0
+margin_bottom = 14.0
+
+[node name="Label" type="Label" parent="Title"]
+margin_right = 66.0
+margin_bottom = 14.0
+text = "Resources"
+
+[node name="Copy" type="Button" parent="Title"]
+visible = false
+margin_left = 70.0
+margin_right = 113.0
+margin_bottom = 20.0
+hint_tooltip = "Copy to clipboard"
+text = "Copy"
+
+[node name="Paste" type="Button" parent="Title"]
+visible = false
+margin_left = 70.0
+margin_right = 117.0
+margin_bottom = 20.0
+hint_tooltip = "Paste from clipboard"
+text = "Paste"
+
+[node name="List" type="TextEdit" parent="."]
+margin_top = 18.0
+margin_right = 530.0
+margin_bottom = 448.0
+size_flags_vertical = 3
+fold_gutter = true
+smooth_scrolling = true
+wrap_enabled = true
+
+[connection signal="pressed" from="Title/Copy" to="." method="_on_Copy_pressed"]
+[connection signal="pressed" from="Title/Paste" to="." method="_on_Paste_pressed"]
