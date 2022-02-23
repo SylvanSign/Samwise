@@ -101,7 +101,7 @@ func download_assets() -> void:
 	rm_rf(ProjectSettings.globalize_path('user://cards'))
 	# TODO mer has higher quality, larger dimensions. But git clone takes forever and
 	# seems to often fail...
-#				var assets_path = git_clone_assets_from_mer()
+	# var assets_path = git_clone_assets_from_mer()
 	var assets_path = git_clone_assets_from_meccges()
 	label.text = 'Building pck file from cards...'
 	yield(get_tree(), "idle_frame")
