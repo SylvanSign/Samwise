@@ -45,6 +45,8 @@ characters = NodePath("MainContainer/HBoxContainer/DeckList/Sections/Bottom/Char
 pool = NodePath("MainContainer/HBoxContainer/DeckList/Sections/Bottom/Pool")
 fw_dc_sb = NodePath("MainContainer/HBoxContainer/DeckList/Sections/Bottom/VBoxContainer/FW-DC-SB")
 sites = NodePath("MainContainer/HBoxContainer/DeckList/Sections/Bottom/VBoxContainer/Sites")
+loadDialog = NodePath("Load")
+saveDialog = NodePath("Save")
 
 [node name="MainContainer" type="MarginContainer" parent="."]
 anchor_right = 1.0
@@ -284,50 +286,60 @@ margin_bottom = 34.0
 custom_constants/separation = 10
 alignment = 1
 
+[node name="Save" type="Button" parent="MainContainer/HBoxContainer/DeckList/Sections/SectionButtons"]
+margin_right = 45.0
+margin_bottom = 34.0
+text = "Save"
+
+[node name="Load" type="Button" parent="MainContainer/HBoxContainer/DeckList/Sections/SectionButtons"]
+margin_left = 55.0
+margin_right = 107.0
+margin_bottom = 34.0
+text = "Load"
+
+[node name="CardnumSpacer" type="MarginContainer" parent="MainContainer/HBoxContainer/DeckList/Sections/SectionButtons"]
+margin_left = 117.0
+margin_right = 127.0
+margin_bottom = 34.0
+size_flags_horizontal = 3
+
 [node name="ImportFromCardnum" type="Button" parent="MainContainer/HBoxContainer/DeckList/Sections/SectionButtons"]
-margin_right = 184.0
+margin_left = 137.0
+margin_right = 321.0
 margin_bottom = 34.0
 rect_min_size = Vector2( 0, 32 )
 size_flags_horizontal = 0
 text = "Import from Cardnum"
 
 [node name="ExportForCardnum" type="Button" parent="MainContainer/HBoxContainer/DeckList/Sections/SectionButtons"]
-margin_left = 194.0
-margin_right = 367.0
+margin_left = 331.0
+margin_right = 504.0
 margin_bottom = 34.0
 size_flags_horizontal = 0
 text = "Export for Cardnum"
 
-[node name="Import" type="Button" parent="MainContainer/HBoxContainer/DeckList/Sections/SectionButtons"]
-visible = false
-margin_left = 454.0
-margin_right = 519.0
-margin_bottom = 22.0
-text = "Import"
-
-[node name="Export" type="Button" parent="MainContainer/HBoxContainer/DeckList/Sections/SectionButtons"]
-visible = false
-margin_left = 492.0
-margin_right = 555.0
-margin_bottom = 22.0
-text = "Export"
+[node name="ClearDeckSpacer" type="MarginContainer" parent="MainContainer/HBoxContainer/DeckList/Sections/SectionButtons"]
+margin_left = 514.0
+margin_right = 524.0
+margin_bottom = 34.0
+size_flags_horizontal = 3
 
 [node name="ClearDeck" type="Button" parent="MainContainer/HBoxContainer/DeckList/Sections/SectionButtons"]
-margin_left = 377.0
-margin_right = 478.0
+margin_left = 534.0
+margin_right = 635.0
 margin_bottom = 34.0
 size_flags_horizontal = 0
 text = "Clear Deck"
 
-[node name="MarginContainer" type="MarginContainer" parent="MainContainer/HBoxContainer/DeckList/Sections/SectionButtons"]
-margin_left = 488.0
-margin_right = 656.0
+[node name="FullScreenSpacer" type="MarginContainer" parent="MainContainer/HBoxContainer/DeckList/Sections/SectionButtons"]
+margin_left = 645.0
+margin_right = 655.0
 margin_bottom = 34.0
 size_flags_horizontal = 3
 
 [node name="FullScreen" type="Button" parent="MainContainer/HBoxContainer/DeckList/Sections/SectionButtons"]
-margin_left = 666.0
-margin_right = 768.0
+margin_left = 665.0
+margin_right = 767.0
 margin_bottom = 34.0
 rect_min_size = Vector2( 0, 34 )
 size_flags_vertical = 0
@@ -460,112 +472,42 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Import" type="WindowDialog" parent="."]
+[node name="Load" type="FileDialog" parent="."]
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -299.0
-margin_top = -199.0
-margin_right = 299.0
-margin_bottom = 199.0
-popup_exclusive = true
-window_title = "Import"
+margin_left = -449.0
+margin_top = -253.0
+margin_right = 449.0
+margin_bottom = 253.0
+window_title = "Load a Deck"
+mode = 0
+access = 1
+show_hidden_files = true
+current_dir = "user://decks/"
+current_path = "user://decks/"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="MarginContainer" type="MarginContainer" parent="Import"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-custom_constants/margin_right = 20
-custom_constants/margin_top = 20
-custom_constants/margin_left = 20
-custom_constants/margin_bottom = 10
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Import/MarginContainer"]
-margin_left = 20.0
-margin_top = 20.0
-margin_right = 578.0
-margin_bottom = 388.0
-custom_constants/separation = 10
-
-[node name="TextEdit" type="TextEdit" parent="Import/MarginContainer/VBoxContainer"]
-margin_right = 558.0
-margin_bottom = 336.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-fold_gutter = true
-smooth_scrolling = true
-wrap_enabled = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Import" type="Button" parent="Import/MarginContainer/VBoxContainer"]
-margin_left = 246.0
-margin_top = 346.0
-margin_right = 311.0
-margin_bottom = 368.0
-size_flags_horizontal = 4
-text = "Import"
-
-[node name="Export" type="WindowDialog" parent="."]
+[node name="Save" type="FileDialog" parent="."]
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -299.0
-margin_top = -199.0
-margin_right = 299.0
-margin_bottom = 199.0
-popup_exclusive = true
-window_title = "Export"
+margin_left = -449.0
+margin_top = -253.0
+margin_right = 449.0
+margin_bottom = 253.0
+window_title = "Save Your Deck"
+access = 1
+show_hidden_files = true
+current_dir = "user://decks/"
+current_path = "user://decks/"
 __meta__ = {
 "_edit_use_anchors_": false
 }
-
-[node name="MarginContainer" type="MarginContainer" parent="Export"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-custom_constants/margin_right = 20
-custom_constants/margin_top = 20
-custom_constants/margin_left = 20
-custom_constants/margin_bottom = 10
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Export/MarginContainer"]
-margin_left = 20.0
-margin_top = 20.0
-margin_right = 578.0
-margin_bottom = 388.0
-custom_constants/separation = 10
-
-[node name="TextEdit" type="TextEdit" parent="Export/MarginContainer/VBoxContainer"]
-margin_right = 558.0
-margin_bottom = 336.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-readonly = true
-fold_gutter = true
-smooth_scrolling = true
-wrap_enabled = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Close" type="Button" parent="Export/MarginContainer/VBoxContainer"]
-margin_left = 246.0
-margin_top = 346.0
-margin_right = 311.0
-margin_bottom = 368.0
-size_flags_horizontal = 4
-text = "Close"
 
 [connection signal="gui_input" from="." to="." method="_on_DeckBuilder_gui_input"]
 [connection signal="resized" from="." to="." method="_on_DeckBuilder_resized"]
@@ -580,6 +522,8 @@ text = "Close"
 [connection signal="pressed" from="MainContainer/HBoxContainer/Finder/Filters/Primary/HBoxContainer/ClearFiltersButton" to="." method="_on_ClearFiltersButton_pressed"]
 [connection signal="pressed" from="MainContainer/HBoxContainer/Finder/VBoxContainer/Gallery/HBoxContainer/Left" to="." method="_on_Left_pressed"]
 [connection signal="pressed" from="MainContainer/HBoxContainer/Finder/VBoxContainer/Gallery/HBoxContainer/Right" to="." method="_on_Right_pressed"]
+[connection signal="pressed" from="MainContainer/HBoxContainer/DeckList/Sections/SectionButtons/Save" to="." method="_on_Save_pressed"]
+[connection signal="pressed" from="MainContainer/HBoxContainer/DeckList/Sections/SectionButtons/Load" to="." method="_on_Load_pressed"]
 [connection signal="pressed" from="MainContainer/HBoxContainer/DeckList/Sections/SectionButtons/ImportFromCardnum" to="." method="_on_ImportFromCardnum_pressed"]
 [connection signal="pressed" from="MainContainer/HBoxContainer/DeckList/Sections/SectionButtons/ExportForCardnum" to="." method="_on_ExportForCardnum_pressed"]
 [connection signal="pressed" from="MainContainer/HBoxContainer/DeckList/Sections/SectionButtons/ClearDeck" to="." method="_on_ClearDeck_pressed"]

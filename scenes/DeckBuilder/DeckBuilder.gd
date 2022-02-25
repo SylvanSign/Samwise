@@ -28,6 +28,9 @@ export(NodePath) onready var pool = get_node(pool) as DeckSection
 export(NodePath) onready var fw_dc_sb = get_node(fw_dc_sb) as DeckSection
 export(NodePath) onready var sites = get_node(sites) as DeckSection
 
+export(NodePath) onready var loadDialog = get_node(loadDialog) as FileDialog
+export(NodePath) onready var saveDialog = get_node(saveDialog) as FileDialog
+
 onready var sections = [
 	resources,
 	hazards,
@@ -47,6 +50,7 @@ var cur_section: DeckSection
 var clearing_filters := false
 
 func _ready() -> void:
+	initialize_decks_dir()
 	texture = Global.get_texture_from_cards_pck('background.png')
 	set_drag_forwarding_recursively(deck_list_card_drag_to_container)
 	grid.columns = card_columns
@@ -54,6 +58,12 @@ func _ready() -> void:
 	cur_section = resources
 	cur_section.toggle_highlight()
 	reset()
+
+
+func initialize_decks_dir() -> void:
+	var dir = Directory.new()
+	assert(OK == dir.open('user://'))
+	assert(OK == dir.make_dir_recursive('decks'))
 
 
 func set_drag_forwarding_recursively(control: Control) -> void:
@@ -429,3 +439,11 @@ func _on_Text_text_changed(new_text):
 func _on_Quote_text_changed(new_text):
 	if new_text.empty() and not clearing_filters:
 		run_query(search_by_quote)
+
+
+func _on_Load_pressed() -> void:
+	loadDialog.popup_centered_ratio(0.5)
+
+
+func _on_Save_pressed() -> void:
+	saveDialog.popup_centered_ratio(0.5)
