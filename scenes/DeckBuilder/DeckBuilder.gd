@@ -447,3 +447,11 @@ func _on_Load_pressed() -> void:
 
 func _on_Save_pressed() -> void:
 	saveDialog.popup_centered_ratio(0.5)
+
+
+func _on_LoadDialog_file_selected(path: String) -> void:
+	print('Loading ', path)
+
+
+func _on_SaveDialog_file_selected(path: String) -> void:
+	print('Saving ', path)

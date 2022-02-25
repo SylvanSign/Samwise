@@ -45,8 +45,8 @@ characters = NodePath("MainContainer/HBoxContainer/DeckList/Sections/Bottom/Char
 pool = NodePath("MainContainer/HBoxContainer/DeckList/Sections/Bottom/Pool")
 fw_dc_sb = NodePath("MainContainer/HBoxContainer/DeckList/Sections/Bottom/VBoxContainer/FW-DC-SB")
 sites = NodePath("MainContainer/HBoxContainer/DeckList/Sections/Bottom/VBoxContainer/Sites")
-loadDialog = NodePath("Load")
-saveDialog = NodePath("Save")
+loadDialog = NodePath("LoadDialog")
+saveDialog = NodePath("SaveDialog")
 
 [node name="MainContainer" type="MarginContainer" parent="."]
 anchor_right = 1.0
@@ -472,7 +472,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Load" type="FileDialog" parent="."]
+[node name="LoadDialog" type="FileDialog" parent="."]
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -482,8 +482,10 @@ margin_top = -253.0
 margin_right = 449.0
 margin_bottom = 253.0
 window_title = "Load a Deck"
+mode_overrides_title = false
 mode = 0
 access = 1
+filters = PoolStringArray( "*.deck ; Deck" )
 show_hidden_files = true
 current_dir = "user://decks/"
 current_path = "user://decks/"
@@ -491,7 +493,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Save" type="FileDialog" parent="."]
+[node name="SaveDialog" type="FileDialog" parent="."]
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -501,7 +503,9 @@ margin_top = -253.0
 margin_right = 449.0
 margin_bottom = 253.0
 window_title = "Save Your Deck"
+mode_overrides_title = false
 access = 1
+filters = PoolStringArray( "*.deck ; Deck" )
 show_hidden_files = true
 current_dir = "user://decks/"
 current_path = "user://decks/"
@@ -565,3 +569,5 @@ __meta__ = {
 [connection signal="switch_tab_and_drop" from="MainContainer/HBoxContainer/DeckList/Sections/Bottom/VBoxContainer/Sites" to="." method="_on_DeckSection_switch_tab_and_drop"]
 [connection signal="import" from="ImportCardnumPopup" to="." method="_on_ImportCardnumPopup_import"]
 [connection signal="confirmed" from="ConfirmClearDeck" to="." method="_on_ConfirmClearDeck_confirmed"]
+[connection signal="file_selected" from="LoadDialog" to="." method="_on_LoadDialog_file_selected"]
+[connection signal="file_selected" from="SaveDialog" to="." method="_on_SaveDialog_file_selected"]
