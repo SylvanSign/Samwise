@@ -4,7 +4,19 @@
 [ext_resource path="res://scenes/DeckBuilder/DeckBuilderTheme.tres" type="Theme" id=2]
 [ext_resource path="res://scenes/DeckBuilder/DeckList/DeckListCardFont.tres" type="DynamicFont" id=3]
 
-[node name="PckDownloader" type="MarginContainer"]
+[node name="PckDownloader" type="ColorRect"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0.694118, 0.694118, 0.694118, 1 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Timer" type="Timer" parent="."]
+one_shot = true
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
 theme = ExtResource( 2 )
@@ -12,30 +24,21 @@ custom_constants/margin_right = 300
 custom_constants/margin_top = 300
 custom_constants/margin_left = 300
 custom_constants/margin_bottom = 300
-script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Timer" type="Timer" parent="."]
-wait_time = 0.05
-one_shot = true
-
-[node name="Control" type="Control" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
 margin_left = 300.0
 margin_top = 300.0
 margin_right = 1300.0
 margin_bottom = 600.0
+custom_constants/separation = 20
 
-[node name="Label" type="Label" parent="Control"]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -500.0
-margin_top = -6.5
-margin_right = 500.0
-margin_bottom = 6.5
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer"]
+margin_right = 1000.0
+margin_bottom = 13.0
+custom_colors/font_color = Color( 0, 0, 0, 1 )
 custom_fonts/font = ExtResource( 3 )
 text = "Checking for cards pack..."
 align = 1
@@ -43,16 +46,45 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="DownloadButton" type="Button" parent="Control"]
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-margin_left = -37.0
-margin_top = -49.0
-margin_right = 37.0
+[node name="GitMessage" type="RichTextLabel" parent="MarginContainer/VBoxContainer"]
+visible = false
+margin_top = 33.0
+margin_right = 1000.0
+margin_bottom = 159.0
+size_flags_horizontal = 3
+custom_colors/default_color = Color( 0, 0, 0, 1 )
+custom_fonts/normal_font = ExtResource( 3 )
+bbcode_enabled = true
+bbcode_text = "[center]
+assets source [color=blue][url]https://github.com/semaex/MeCCG-Windows-EN/tree/master/metw/graphics/Metw[/url][/color]
+
+
+
+Please make sure you have git installed [color=blue][url]https://github.com/git-guides/install-git#install-git[/url][/color]
+[/center]"
+text = "
+assets source https://github.com/semaex/MeCCG-Windows-EN/tree/master/metw/graphics/Metw
+
+
+
+Please make sure you have git installed https://github.com/git-guides/install-git#install-git
+"
+fit_content_height = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DownloadButton" type="Button" parent="MarginContainer/VBoxContainer"]
+visible = false
+margin_left = 375.0
+margin_top = 33.0
+margin_right = 625.0
+margin_bottom = 83.0
+rect_min_size = Vector2( 250, 50 )
+size_flags_horizontal = 4
 custom_fonts/font = ExtResource( 3 )
-text = "yes"
+text = "Download Assets"
 
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
-[connection signal="pressed" from="Control/DownloadButton" to="." method="_on_DownloadButton_pressed"]
+[connection signal="meta_clicked" from="MarginContainer/VBoxContainer/GitMessage" to="." method="_on_GitMessage_meta_clicked"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/DownloadButton" to="." method="_on_DownloadButton_pressed"]
