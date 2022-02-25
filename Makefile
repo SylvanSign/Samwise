@@ -9,13 +9,16 @@ export:
 zip: builds/linux.zip builds/mac.zip builds/windows.zip
 
 builds/linux.zip: builds/linux
-	zip -r builds/linux builds/linux
+	rm -f builds/linux.zip
+	cd builds && zip -r linux linux
 
 builds/mac.zip: builds/mac
-	cp builds/mac/samwise.zip builds/mac.zip
+	rm -f builds/mac.zip
+	cd builds && cp mac/samwise.zip mac.zip
 
 builds/windows.zip: builds/windows
-	zip -r builds/windows builds/windows
+	rm -f builds/windows.zip
+	cd builds && zip -r windows windows
 
 cards.json: cards-dc.json
 	node clean.js > cards.json
