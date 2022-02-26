@@ -50,7 +50,6 @@ var cur_section: DeckSection
 var clearing_filters := false
 
 func _ready() -> void:
-	initialize_decks_dir()
 	texture = Global.get_texture_from_cards_pck('background.png')
 	set_drag_forwarding_recursively(deck_list_card_drag_to_container)
 	grid.columns = card_columns
@@ -58,12 +57,6 @@ func _ready() -> void:
 	cur_section = resources
 	cur_section.toggle_highlight()
 	reset()
-
-
-func initialize_decks_dir() -> void:
-	var dir = Directory.new()
-	assert(OK == dir.open('user://'))
-	assert(OK == dir.make_dir_recursive('decks'))
 
 
 func set_drag_forwarding_recursively(control: Control) -> void:
@@ -475,12 +468,12 @@ func _on_Quote_text_changed(new_text):
 
 func _on_Load_pressed() -> void:
 	loadDialog.invalidate()
-	loadDialog.popup_centered_ratio(0.5)
+	loadDialog.popup_centered_ratio()
 
 
 func _on_Save_pressed() -> void:
 	saveDialog.invalidate()
-	saveDialog.popup_centered_ratio(0.5)
+	saveDialog.popup_centered_ratio()
 
 
 func _on_AllDecks_pressed() -> void:

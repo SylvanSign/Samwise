@@ -7,7 +7,22 @@ onready var download_button := $MarginContainer/VBoxContainer/DownloadButton
 
 
 func _ready() -> void:
+	setup_decks_dir()
 	check_for_cards()
+
+
+func setup_decks_dir() -> void:
+	var dir := Directory.new()
+	if dir.dir_exists('user://decks/challenge'):
+		return
+	assert(OK == dir.open('res://decks'))
+	dir.make_dir_recursive('user://decks/challenge')
+	dir.list_dir_begin(true, true)
+	var deck = dir.get_next()
+	while deck != "":
+		assert(OK == dir.copy('res://decks'.plus_file(deck), 'user://decks/challenge'.plus_file(deck)))
+		deck = dir.get_next()
+
 
 
 func pack(assets_path: String) -> void:
