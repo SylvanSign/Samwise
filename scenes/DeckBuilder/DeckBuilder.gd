@@ -31,12 +31,12 @@ export(NodePath) onready var sites = get_node(sites) as DeckSection
 export(NodePath) onready var loadDialog = get_node(loadDialog) as FileDialog
 export(NodePath) onready var saveDialog = get_node(saveDialog) as FileDialog
 
-onready var sections = [
+onready var sections := [
+	pool,
+	characters,
 	resources,
 	hazards,
 	sideboard,
-	characters,
-	pool,
 	fw_dc_sb,
 	sites,
 ]
@@ -387,12 +387,44 @@ func _on_ExportForCardnum_pressed() -> void:
 	export_for_cardnum.popup_centered_ratio()
 
 
+func _on_SaveDialog_file_selected(path: String) -> void:
+	var file := File.new()
+	file.open(path, File.WRITE)
+	for tab in sections:
+		file.store_line(tab.name)
+		file.store_line(tab.get_list() + '\n')
+	file.close()
+
+
 func _on_ImportFromCardnum_pressed() -> void:
 	import_from_cardnum.clear()
 	import_from_cardnum.popup_centered_ratio()
 
 
 func _on_ImportCardnumPopup_import(deck: Dictionary) -> void:
+	for tab in sections:
+		tab.set_list(ALL_DATA, deck[tab.name])
+
+
+func _on_LoadDialog_file_selected(path: String) -> void:
+	var file := File.new()
+	file.open(path, File.READ)
+
+	var deck := {}
+	while file.get_position() < file.get_len():
+		var section_name = file.get_line()
+		if section_name.empty():
+			continue
+		var section_list := PoolStringArray()
+		while true:
+			var line := file.get_line()
+			if line.empty():
+				break
+			section_list.append(line)
+		deck[section_name] = section_list.join('\n')
+
+	file.close()
+
 	for tab in sections:
 		tab.set_list(ALL_DATA, deck[tab.name])
 
@@ -447,11 +479,3 @@ func _on_Load_pressed() -> void:
 
 func _on_Save_pressed() -> void:
 	saveDialog.popup_centered_ratio(0.5)
-
-
-func _on_LoadDialog_file_selected(path: String) -> void:
-	print('Loading ', path)
-
-
-func _on_SaveDialog_file_selected(path: String) -> void:
-	print('Saving ', path)
