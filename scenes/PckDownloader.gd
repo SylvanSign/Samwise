@@ -30,7 +30,6 @@ func setup_decks_dir() -> void:
 		deck = dir.get_next()
 
 
-
 func pack(assets_path: String) -> void:
 	var packer = PCKPacker.new()
 	handle_error(packer.pck_start('user://cards.pck'))

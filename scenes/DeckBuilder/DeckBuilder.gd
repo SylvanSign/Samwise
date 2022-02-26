@@ -180,6 +180,7 @@ func _on_Card_mouse_entered(card: Card) -> void:
 
 func _on_Card_mouse_exited() -> void:
 	preview.hide()
+	preview.spot = -1
 
 
 func _on_DeckSection_preview(card, texture) -> void:
