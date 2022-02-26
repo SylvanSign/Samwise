@@ -19,7 +19,6 @@ expand = true
 stretch_mode = 7
 script = ExtResource( 2 )
 __meta__ = {
-"_edit_use_anchors_": false,
 "_editor_description_": ""
 }
 CardScene = ExtResource( 4 )
@@ -354,16 +353,17 @@ rect_min_size = Vector2( 0, 10 )
 [node name="Top" type="HBoxContainer" parent="MainContainer/HBoxContainer/DeckList/Sections"]
 margin_top = 44.0
 margin_right = 768.0
-margin_bottom = 462.0
+margin_bottom = 545.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+size_flags_stretch_ratio = 3.0
 custom_constants/separation = 0
 
 [node name="Resources" parent="MainContainer/HBoxContainer/DeckList/Sections/Top" instance=ExtResource( 7 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_right = 256.0
-margin_bottom = 418.0
+margin_bottom = 501.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 primary = [ "Resource" ]
@@ -373,7 +373,7 @@ anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 256.0
 margin_right = 512.0
-margin_bottom = 418.0
+margin_bottom = 501.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 primary = [ "Hazard" ]
@@ -383,25 +383,26 @@ anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 512.0
 margin_right = 768.0
-margin_bottom = 418.0
+margin_bottom = 501.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 size = 30
 primary = [ "Character", "Resource", "Hazard" ]
 
 [node name="Bottom" type="HBoxContainer" parent="MainContainer/HBoxContainer/DeckList/Sections"]
-margin_top = 462.0
+margin_top = 545.0
 margin_right = 768.0
 margin_bottom = 880.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+size_flags_stretch_ratio = 2.0
 custom_constants/separation = 0
 
 [node name="Characters" parent="MainContainer/HBoxContainer/DeckList/Sections/Bottom" instance=ExtResource( 7 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_right = 256.0
-margin_bottom = 418.0
+margin_bottom = 335.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 size = 13
@@ -412,7 +413,7 @@ anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 256.0
 margin_right = 512.0
-margin_bottom = 418.0
+margin_bottom = 335.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 size = 20
@@ -421,7 +422,7 @@ primary = [ "Character", "Resource" ]
 [node name="VBoxContainer" type="VBoxContainer" parent="MainContainer/HBoxContainer/DeckList/Sections/Bottom"]
 margin_left = 512.0
 margin_right = 768.0
-margin_bottom = 418.0
+margin_bottom = 335.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -429,7 +430,7 @@ size_flags_vertical = 3
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_right = 256.0
-margin_bottom = 207.0
+margin_bottom = 165.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 size = 10
@@ -438,9 +439,9 @@ primary = [ "Character", "Resource", "Hazard" ]
 [node name="Sites" parent="MainContainer/HBoxContainer/DeckList/Sections/Bottom/VBoxContainer" instance=ExtResource( 7 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_top = 211.0
+margin_top = 169.0
 margin_right = 256.0
-margin_bottom = 418.0
+margin_bottom = 335.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 primary = [ "Site" ]
