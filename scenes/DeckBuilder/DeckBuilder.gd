@@ -474,8 +474,14 @@ func _on_Quote_text_changed(new_text):
 
 
 func _on_Load_pressed() -> void:
+	loadDialog.invalidate()
 	loadDialog.popup_centered_ratio(0.5)
 
 
 func _on_Save_pressed() -> void:
+	saveDialog.invalidate()
 	saveDialog.popup_centered_ratio(0.5)
+
+
+func _on_AllDecks_pressed() -> void:
+	OS.shell_open(ProjectSettings.globalize_path('user://decks'))
