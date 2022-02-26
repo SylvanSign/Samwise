@@ -1,7 +1,10 @@
 .PHONY: export
 export:
+	mkdir builds/linux
 	godot --export "Linux/X11"
+	mkdir builds/windows
 	godot --export "Windows Desktop"
+	mkdir builds/mac
 	godot --export "Mac OSX"
 	make zip
 

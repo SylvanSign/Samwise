@@ -15,12 +15,18 @@ func setup_decks_dir() -> void:
 	var dir := Directory.new()
 	if dir.dir_exists('user://decks/challenge'):
 		return
-	assert(OK == dir.open('res://decks'))
+
+	if OK != dir.open('res://decks/'):
+		printerr('Error opening res://decks/')
+		return
+
 	dir.make_dir_recursive('user://decks/challenge')
 	dir.list_dir_begin(true, true)
 	var deck = dir.get_next()
 	while deck != "":
-		assert(OK == dir.copy('res://decks'.plus_file(deck), 'user://decks/challenge'.plus_file(deck)))
+		print('trying to copy ', deck)
+		if OK != dir.copy('res://decks'.plus_file(deck), 'user://decks/challenge'.plus_file(deck)):
+			printerr('Error copying ', deck)
 		deck = dir.get_next()
 
 
