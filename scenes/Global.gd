@@ -4,7 +4,7 @@ extends Node
 #var CARD_ASPECT := Vector2(570, 796).aspect()
 # meccg.es gccg size:
 var CARD_ASPECT := Vector2(420, 587).aspect()
-
+var CARD_LENGTH := Vector2(420, 587).length()
 var dragging_something := false
 
 func get_texture_from_data(data: Dictionary) -> Texture:

@@ -12,9 +12,6 @@ custom_constants/margin_top = 3
 custom_constants/margin_left = 3
 custom_constants/margin_bottom = 3
 script = ExtResource( 2 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 color_rect = NodePath("ColorRect")
 grid = NodePath("MarginContainer/VBoxContainer/ScrollContainer/CardTitles")
 count_label = NodePath("MarginContainer/VBoxContainer/LabelContainer/PageLabels/Count")

@@ -169,20 +169,17 @@ func load_json_file(path):
 		push_error("yikers!")
 
 
-func show_preview(card: Control, texture: Texture, left_only: bool, spot := -1) -> void:
+func show_preview(card: Control, texture: Texture, left_only: bool, spot := -1, visible := true) -> void:
 	if not Global.dragging_something:
-		preview.setup(card, texture, left_only, spot)
-		preview.visible = true
+		preview.setup(card, texture, left_only, spot, visible)
 
 
 func _on_Card_mouse_entered(card: Card) -> void:
-	if card.previewable:
-		show_preview(card, card.texture, false, card.spot)
+	show_preview(card, card.texture, false, card.spot, card.previewable)
 
 
 func _on_Card_mouse_exited() -> void:
 	preview.hide()
-	preview.spot = -1
 
 
 func _on_DeckSection_preview(card, texture) -> void:
@@ -190,7 +187,7 @@ func _on_DeckSection_preview(card, texture) -> void:
 
 
 func _on_DeckSection_end_preview() -> void:
-	preview.hide()
+	preview.hide(true)
 
 
 func _on_Card_add_card(card: Card) -> void:
