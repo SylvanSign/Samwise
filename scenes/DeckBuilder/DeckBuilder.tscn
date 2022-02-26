@@ -297,54 +297,42 @@ margin_right = 107.0
 margin_bottom = 34.0
 text = "Load"
 
-[node name="AllDecksSpacer" type="MarginContainer" parent="MainContainer/HBoxContainer/DeckList/Sections/SectionButtons"]
+[node name="ClearDeck" type="Button" parent="MainContainer/HBoxContainer/DeckList/Sections/SectionButtons"]
 margin_left = 117.0
-margin_right = 135.0
+margin_right = 218.0
 margin_bottom = 34.0
-size_flags_horizontal = 3
+size_flags_horizontal = 0
+text = "Clear Deck"
 
 [node name="AllDecks" type="Button" parent="MainContainer/HBoxContainer/DeckList/Sections/SectionButtons"]
-margin_left = 145.0
-margin_right = 235.0
+margin_left = 228.0
+margin_right = 361.0
 margin_bottom = 34.0
-text = "All Decks"
+text = "All Your Decks"
 
 [node name="CardnumSpacer" type="MarginContainer" parent="MainContainer/HBoxContainer/DeckList/Sections/SectionButtons"]
-margin_left = 245.0
-margin_right = 264.0
+margin_left = 371.0
+margin_right = 375.0
 margin_bottom = 34.0
 size_flags_horizontal = 3
 
 [node name="ImportFromCardnum" type="Button" parent="MainContainer/HBoxContainer/DeckList/Sections/SectionButtons"]
-margin_left = 274.0
-margin_right = 401.0
+margin_left = 385.0
+margin_right = 512.0
 margin_bottom = 34.0
 rect_min_size = Vector2( 0, 32 )
 size_flags_horizontal = 0
 text = "Load Cardnum"
 
 [node name="ExportForCardnum" type="Button" parent="MainContainer/HBoxContainer/DeckList/Sections/SectionButtons"]
-margin_left = 411.0
-margin_right = 531.0
+margin_left = 522.0
+margin_right = 642.0
 margin_bottom = 34.0
 size_flags_horizontal = 0
 text = "Save Cardnum"
 
-[node name="ClearDeckSpacer" type="MarginContainer" parent="MainContainer/HBoxContainer/DeckList/Sections/SectionButtons"]
-margin_left = 541.0
-margin_right = 560.0
-margin_bottom = 34.0
-size_flags_horizontal = 3
-
-[node name="ClearDeck" type="Button" parent="MainContainer/HBoxContainer/DeckList/Sections/SectionButtons"]
-margin_left = 570.0
-margin_right = 627.0
-margin_bottom = 34.0
-size_flags_horizontal = 0
-text = "Clear"
-
 [node name="FullScreenSpacer" type="MarginContainer" parent="MainContainer/HBoxContainer/DeckList/Sections/SectionButtons"]
-margin_left = 637.0
+margin_left = 652.0
 margin_right = 656.0
 margin_bottom = 34.0
 size_flags_horizontal = 3
@@ -540,10 +528,10 @@ __meta__ = {
 [connection signal="pressed" from="MainContainer/HBoxContainer/Finder/VBoxContainer/Gallery/HBoxContainer/Right" to="." method="_on_Right_pressed"]
 [connection signal="pressed" from="MainContainer/HBoxContainer/DeckList/Sections/SectionButtons/Save" to="." method="_on_Save_pressed"]
 [connection signal="pressed" from="MainContainer/HBoxContainer/DeckList/Sections/SectionButtons/Load" to="." method="_on_Load_pressed"]
+[connection signal="pressed" from="MainContainer/HBoxContainer/DeckList/Sections/SectionButtons/ClearDeck" to="." method="_on_ClearDeck_pressed"]
 [connection signal="pressed" from="MainContainer/HBoxContainer/DeckList/Sections/SectionButtons/AllDecks" to="." method="_on_AllDecks_pressed"]
 [connection signal="pressed" from="MainContainer/HBoxContainer/DeckList/Sections/SectionButtons/ImportFromCardnum" to="." method="_on_ImportFromCardnum_pressed"]
 [connection signal="pressed" from="MainContainer/HBoxContainer/DeckList/Sections/SectionButtons/ExportForCardnum" to="." method="_on_ExportForCardnum_pressed"]
-[connection signal="pressed" from="MainContainer/HBoxContainer/DeckList/Sections/SectionButtons/ClearDeck" to="." method="_on_ClearDeck_pressed"]
 [connection signal="pressed" from="MainContainer/HBoxContainer/DeckList/Sections/SectionButtons/FullScreen" to="." method="_on_FullScreen_pressed"]
 [connection signal="count_changed" from="MainContainer/HBoxContainer/DeckList/Sections/Top/Resources" to="." method="_on_DeckSection_count_changed"]
 [connection signal="end_preview" from="MainContainer/HBoxContainer/DeckList/Sections/Top/Resources" to="." method="_on_DeckSection_end_preview"]
