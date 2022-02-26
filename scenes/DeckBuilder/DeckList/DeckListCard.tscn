@@ -32,9 +32,6 @@ margin_right = -1570.0
 margin_bottom = -871.0
 ratio = 7.559
 script = ExtResource( 2 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 count = NodePath("HBoxContainer/Count")
 title_art = NodePath("HBoxContainer/TitleArt")
 

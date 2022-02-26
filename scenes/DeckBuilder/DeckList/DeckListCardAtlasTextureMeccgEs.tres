@@ -2,4 +2,4 @@
 
 [resource]
 resource_local_to_scene = true
-region = Rect2( 27.0698, 27.0125, 360.89, 50.6096 )
+region = Rect2( 27, 28, 361, 48 )
