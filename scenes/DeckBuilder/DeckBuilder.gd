@@ -1,8 +1,6 @@
 extends TextureRect
 
 
-export(int) var card_rows := 2
-export(int) var card_columns := 3
 export(PackedScene) var CardScene: PackedScene
 export(NodePath) onready var deck_list_card_drag_to_container = get_node(deck_list_card_drag_to_container) as Container
 export(NodePath) onready var grid = get_node(grid) as GridContainer
@@ -10,6 +8,8 @@ export(NodePath) onready var current_page = get_node(current_page) as Label
 export(NodePath) onready var total_pages = get_node(total_pages) as Label
 export(NodePath) onready var left = get_node(left) as Button
 export(NodePath) onready var right = get_node(right) as Button
+export(NodePath) onready var zoom_out = get_node(zoom_out) as Button
+export(NodePath) onready var zoom_in = get_node(zoom_in) as Button
 export(NodePath) onready var preview = get_node(preview) as Preview
 export(NodePath) onready var export_for_cardnum = get_node(export_for_cardnum) as ExportCardnumPopup
 export(NodePath) onready var import_from_cardnum = get_node(import_from_cardnum) as ImportCardnumPopup
@@ -31,6 +31,16 @@ export(NodePath) onready var sites = get_node(sites) as DeckSection
 export(NodePath) onready var loadDialog = get_node(loadDialog) as FileDialog
 export(NodePath) onready var saveDialog = get_node(saveDialog) as FileDialog
 
+const ZOOM_LEVELS := [
+	[4, 4],
+	[3, 3],
+	[2, 2],
+	[1, 1],
+]
+var cur_zoom_level := 1
+var card_rows: int = ZOOM_LEVELS[cur_zoom_level][0]
+var card_columns: int = ZOOM_LEVELS[cur_zoom_level][1]
+
 onready var sections := [
 	pool,
 	characters,
@@ -41,7 +51,7 @@ onready var sections := [
 	sites,
 ]
 
-onready var cards_per_page := float(card_rows * card_columns)
+onready var cards_per_page := card_rows * card_columns
 var ALL_DATA: Array = load_json_file('res://cards.json')
 var data: Array
 var total_cards: int
@@ -84,12 +94,16 @@ func show_results() -> void:
 	total_cards = data.size()
 	left.disabled = true
 	populate_grid_textures()
-	total_pages.text = str(max(ceil(total_cards / cards_per_page), 1))
+	update_total_page_number()
 	update_current_page_number()
 
 
 func update_current_page_number() -> void:
 	current_page.text = str(cur / cards_per_page + 1)
+
+
+func update_total_page_number() -> void:
+	total_pages.text = str(max(ceil(float(total_cards) / cards_per_page), 1))
 
 
 func initialize_grid() -> void:
@@ -201,7 +215,7 @@ func _on_Card_dropped(dd: Dictionary) -> void:
 
 
 func _on_Left_pressed() -> void:
-	cur -= int(cards_per_page)
+	cur -= cards_per_page
 	update_current_page_number()
 	if cur <= 0:
 		left.disabled = true
@@ -211,7 +225,7 @@ func _on_Left_pressed() -> void:
 
 
 func _on_Right_pressed() -> void:
-	cur += int(cards_per_page)
+	cur += cards_per_page
 	update_current_page_number()
 	if cur > 0:
 		left.disabled = false
@@ -238,74 +252,7 @@ func _on_FullScreen_pressed() -> void:
 	OS.window_fullscreen = not OS.window_fullscreen
 	search_by_name.grab_focus()
 
-#Example of card data:
-#{
-#  Alignment:Hero,
-#  Artist:David Deitrick,
-#  Body:6,
-#  Corruption:,
-#  DCpath:Wizards/Adrazar.jpg,
-#  Direct:1,
-#  Gear:,
-#  General:Null,
-#  GoldRing:,
-#  GreaterItem:,
-#  Haven:,
-#  Hoard:,
-#  Home:Dol Amroth ,
-#  ImageName:metw_adrazar.jpg,
-#  Information:,
-#  MEID:TW006,
-#  MPs:1,
-#  MajorItem:,
-#  Mind:3,
-#  MinorItem:,
-#  NameDU:Adrazar,
-#  NameEN:Adrazar,
-#  NameFN:Adrazar,
-#  NameFR:Adrazar,
-#  NameGR:Adrazar,
-#  NameIT:Adrazar,
-#  NameJP:アドラザール,
-#  NameSP:Adrazar,
-#  Non:,
-#  Palantiri:,
-#  Path:,
-#  Playable:,
-#  Precise:F1,
-#  Primary:Character,
-#  Prowess:3,
-#  RPath:,
-#  RWMPs:,
-#  Race:Dúnadan,
-#  Rarity:Fixed,
-#  Region:,
-#  Scroll:,
-#  Secondary:character,
-#  Set:METW,
-#  Site:,
-#  Skill:Scout Diplomat,
-#  Specific:,
-#  Stage:Null,
-#  Strikes:Null,
-#  Text:Unique. +1 direct influence against all factions.  "He encouraged all men of worth from near or far to enter his service,
-#  and to those who proved trustworthy he gave rank and reward."-LotR  Home Site: Dol Amroth,
-#  Unique:unique,
-#  code:(TW),
-#  codeFR:0,
-#  codeGR:0,
-#  codeJP:アドラザール,
-#  codeSP:0,
-#  dreamcard:False,
-#  erratum:False,
-#  extras:False,
-#  fullCode:Adrazar (TW),
-#  gccgAlign:,
-#  gccgSet:(TW),
-#  ice_errata:Null,
-#  normalizedtitle:adrazar,
-#  released:True
-#}
+
 func run_query(node_to_focus: LineEdit = null) -> void:
 	var name_query = "*" + search_by_name.text.strip_edges().to_lower() + "*"
 	var text_query = "*" + search_by_text.text.strip_edges().to_lower() + "*"
@@ -476,3 +423,35 @@ func _on_Save_pressed() -> void:
 
 func _on_AllDecks_pressed() -> void:
 	OS.shell_open(ProjectSettings.globalize_path('user://decks'))
+
+
+func _on_ZoomOut_pressed() -> void:
+	cur_zoom_level -= 1
+	zoom_in.disabled = false
+	if cur_zoom_level == 0:
+		zoom_out.disabled = true
+	update_grid_zoom(ZOOM_LEVELS[cur_zoom_level])
+
+
+func _on_ZoomIn_pressed() -> void:
+	cur_zoom_level += 1
+	zoom_out.disabled = false
+	if cur_zoom_level == ZOOM_LEVELS.size() - 1:
+		zoom_in.disabled = true
+	update_grid_zoom(ZOOM_LEVELS[cur_zoom_level])
+
+
+func update_grid_zoom(zoom_levels: Array)-> void:
+	var rows: int = zoom_levels[0]
+	var columns: int = zoom_levels[1]
+	for child in grid.get_children():
+		child.free()
+	cards_per_page = rows * columns
+	grid.columns = columns
+	card_rows = rows
+	card_columns = columns
+	cur = (cur / cards_per_page) * cards_per_page
+	update_current_page_number()
+	update_total_page_number()
+	initialize_grid()
+	populate_grid_textures()

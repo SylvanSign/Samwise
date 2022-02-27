@@ -24,10 +24,12 @@ __meta__ = {
 CardScene = ExtResource( 4 )
 deck_list_card_drag_to_container = NodePath("MainContainer/HBoxContainer/Finder")
 grid = NodePath("MainContainer/HBoxContainer/Finder/VBoxContainer/Gallery/HBoxContainer/CardGrid")
-current_page = NodePath("MainContainer/HBoxContainer/Finder/VBoxContainer/PanelContainer/PageLabels/Current")
-total_pages = NodePath("MainContainer/HBoxContainer/Finder/VBoxContainer/PanelContainer/PageLabels/Total")
+current_page = NodePath("MainContainer/HBoxContainer/Finder/VBoxContainer/HBoxContainer/PanelContainer/PageLabels/Current")
+total_pages = NodePath("MainContainer/HBoxContainer/Finder/VBoxContainer/HBoxContainer/PanelContainer/PageLabels/Total")
 left = NodePath("MainContainer/HBoxContainer/Finder/VBoxContainer/Gallery/HBoxContainer/Left")
 right = NodePath("MainContainer/HBoxContainer/Finder/VBoxContainer/Gallery/HBoxContainer/Right")
+zoom_out = NodePath("MainContainer/HBoxContainer/Finder/VBoxContainer/HBoxContainer/HBoxContainer/ZoomOut")
+zoom_in = NodePath("MainContainer/HBoxContainer/Finder/VBoxContainer/HBoxContainer/HBoxContainer/ZoomIn")
 preview = NodePath("Preview")
 export_for_cardnum = NodePath("ExportCardnumPopup")
 import_from_cardnum = NodePath("ImportCardnumPopup")
@@ -189,8 +191,8 @@ margin_right = 723.0
 margin_bottom = 800.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-custom_constants/vseparation = 10
-custom_constants/hseparation = 10
+custom_constants/vseparation = 5
+custom_constants/hseparation = 5
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -208,18 +210,27 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="PanelContainer" type="PanelContainer" parent="MainContainer/HBoxContainer/Finder/VBoxContainer"]
-margin_left = 327.0
+[node name="HBoxContainer" type="HBoxContainer" parent="MainContainer/HBoxContainer/Finder/VBoxContainer"]
 margin_top = 804.0
-margin_right = 440.0
+margin_right = 768.0
 margin_bottom = 838.0
+
+[node name="MarginContainer2" type="MarginContainer" parent="MainContainer/HBoxContainer/Finder/VBoxContainer/HBoxContainer"]
+margin_right = 323.0
+margin_bottom = 34.0
+size_flags_horizontal = 3
+
+[node name="PanelContainer" type="PanelContainer" parent="MainContainer/HBoxContainer/Finder/VBoxContainer/HBoxContainer"]
+margin_left = 327.0
+margin_right = 440.0
+margin_bottom = 34.0
 size_flags_horizontal = 4
 size_flags_vertical = 0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="PageLabels" type="HBoxContainer" parent="MainContainer/HBoxContainer/Finder/VBoxContainer/PanelContainer"]
+[node name="PageLabels" type="HBoxContainer" parent="MainContainer/HBoxContainer/Finder/VBoxContainer/HBoxContainer/PanelContainer"]
 margin_left = 5.0
 margin_top = 5.0
 margin_right = 108.0
@@ -229,13 +240,13 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Page" type="Label" parent="MainContainer/HBoxContainer/Finder/VBoxContainer/PanelContainer/PageLabels"]
+[node name="Page" type="Label" parent="MainContainer/HBoxContainer/Finder/VBoxContainer/HBoxContainer/PanelContainer/PageLabels"]
 margin_right = 36.0
 margin_bottom = 24.0
 size_flags_horizontal = 4
 text = "Page"
 
-[node name="Current" type="Label" parent="MainContainer/HBoxContainer/Finder/VBoxContainer/PanelContainer/PageLabels"]
+[node name="Current" type="Label" parent="MainContainer/HBoxContainer/Finder/VBoxContainer/HBoxContainer/PanelContainer/PageLabels"]
 margin_left = 40.0
 margin_top = 5.0
 margin_right = 48.0
@@ -244,14 +255,14 @@ size_flags_horizontal = 4
 custom_fonts/font = ExtResource( 9 )
 text = "1"
 
-[node name="Of" type="Label" parent="MainContainer/HBoxContainer/Finder/VBoxContainer/PanelContainer/PageLabels"]
+[node name="Of" type="Label" parent="MainContainer/HBoxContainer/Finder/VBoxContainer/HBoxContainer/PanelContainer/PageLabels"]
 margin_left = 52.0
 margin_right = 70.0
 margin_bottom = 24.0
 size_flags_horizontal = 4
 text = "of"
 
-[node name="Total" type="Label" parent="MainContainer/HBoxContainer/Finder/VBoxContainer/PanelContainer/PageLabels"]
+[node name="Total" type="Label" parent="MainContainer/HBoxContainer/Finder/VBoxContainer/HBoxContainer/PanelContainer/PageLabels"]
 margin_left = 74.0
 margin_top = 5.0
 margin_right = 103.0
@@ -259,6 +270,31 @@ margin_bottom = 18.0
 size_flags_horizontal = 4
 custom_fonts/font = ExtResource( 9 )
 text = "201"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MainContainer/HBoxContainer/Finder/VBoxContainer/HBoxContainer"]
+margin_left = 444.0
+margin_right = 768.0
+margin_bottom = 34.0
+size_flags_horizontal = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="MainContainer/HBoxContainer/Finder/VBoxContainer/HBoxContainer/HBoxContainer"]
+margin_right = 274.0
+margin_bottom = 34.0
+size_flags_horizontal = 3
+
+[node name="ZoomOut" type="Button" parent="MainContainer/HBoxContainer/Finder/VBoxContainer/HBoxContainer/HBoxContainer"]
+margin_left = 278.0
+margin_right = 298.0
+margin_bottom = 34.0
+size_flags_horizontal = 8
+text = "-"
+
+[node name="ZoomIn" type="Button" parent="MainContainer/HBoxContainer/Finder/VBoxContainer/HBoxContainer/HBoxContainer"]
+margin_left = 302.0
+margin_right = 324.0
+margin_bottom = 34.0
+size_flags_horizontal = 8
+text = "+"
 
 [node name="VSeparator" type="VSeparator" parent="MainContainer/HBoxContainer"]
 modulate = Color( 0, 0, 0, 0 )
@@ -527,6 +563,8 @@ __meta__ = {
 [connection signal="pressed" from="MainContainer/HBoxContainer/Finder/Filters/Primary/HBoxContainer/ClearFiltersButton" to="." method="_on_ClearFiltersButton_pressed"]
 [connection signal="pressed" from="MainContainer/HBoxContainer/Finder/VBoxContainer/Gallery/HBoxContainer/Left" to="." method="_on_Left_pressed"]
 [connection signal="pressed" from="MainContainer/HBoxContainer/Finder/VBoxContainer/Gallery/HBoxContainer/Right" to="." method="_on_Right_pressed"]
+[connection signal="pressed" from="MainContainer/HBoxContainer/Finder/VBoxContainer/HBoxContainer/HBoxContainer/ZoomOut" to="." method="_on_ZoomOut_pressed"]
+[connection signal="pressed" from="MainContainer/HBoxContainer/Finder/VBoxContainer/HBoxContainer/HBoxContainer/ZoomIn" to="." method="_on_ZoomIn_pressed"]
 [connection signal="pressed" from="MainContainer/HBoxContainer/DeckList/Sections/SectionButtons/Save" to="." method="_on_Save_pressed"]
 [connection signal="pressed" from="MainContainer/HBoxContainer/DeckList/Sections/SectionButtons/Load" to="." method="_on_Load_pressed"]
 [connection signal="pressed" from="MainContainer/HBoxContainer/DeckList/Sections/SectionButtons/ClearDeck" to="." method="_on_ClearDeck_pressed"]

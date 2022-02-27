@@ -9,9 +9,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 color = Color( 0.694118, 0.694118, 0.694118, 1 )
 script = ExtResource( 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Timer" type="Timer" parent="."]
 one_shot = true
