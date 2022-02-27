@@ -1,8 +1,9 @@
 extends Control
 
+onready var http_request := $HTTPRequest
 onready var timer := $Timer
 onready var label := $MarginContainer/VBoxContainer/Label
-onready var git_message := $MarginContainer/VBoxContainer/GitMessage
+onready var message := $MarginContainer/VBoxContainer/Message
 onready var download_button := $MarginContainer/VBoxContainer/DownloadButton
 
 
@@ -30,10 +31,10 @@ func setup_decks_dir() -> void:
 		deck = dir.get_next()
 
 
-func pack(assets_path: String) -> void:
+func pack() -> void:
 	var packer = PCKPacker.new()
 	handle_error(packer.pck_start('user://cards.pck'))
-	pack_helper(packer, assets_path, 'res://cards')
+	pack_helper(packer, 'metw/graphics/Metw', 'res://cards')
 	handle_error(packer.flush(true))
 	rm_rf(fs_path('user://cards'))
 	check_for_cards()
@@ -70,27 +71,8 @@ func check_for_cards() -> void:
 		get_tree().change_scene("res://scenes/DeckBuilder/DeckBuilder.tscn")
 	else:
 		label.text = 'Missing card assets. Would you like to download them?'
-		git_message.visible = true
+		message.visible = true
 		download_button.visible = true
-
-
-func git_clone_assets_from_meccges() -> String:
-	return git_clone_repo('https://github.com/semaex/MeCCG-Windows-EN', 'metw/graphics/Metw/')
-
-
-func git_clone_assets_from_mer() -> String:
-	return git_clone_repo('https://github.com/usmcgeek/mer', 'data/classic_style/')
-
-
-func git_clone_repo(repo: String, assets_path: String) -> String:
-	var user_cards := fs_path('user://cards')
-	var user_cards_git_dir := fs_path('user://cards/.git')
-	run('git clone '+repo+' --no-checkout ' + user_cards + ' --depth 1')
-	run('git --git-dir '+user_cards_git_dir+' --work-tree '+user_cards+' sparse-checkout init --cone')
-	run('git --git-dir '+user_cards_git_dir+' sparse-checkout set '+assets_path)
-	run('git --git-dir '+user_cards_git_dir+' --work-tree '+user_cards+' checkout')
-	rm_rf(user_cards_git_dir)
-	return 'user://cards/'+assets_path
 
 
 func rm_rf(path: String) -> void:
@@ -121,45 +103,38 @@ func run(command: String) -> void:
 		printerr(output)
 
 
-func _on_Timer_timeout() -> void:
-	download_assets()
-
-
 func _on_DownloadButton_pressed() -> void:
-	download_button.disabled = true
-	if git_installed():
-		git_message.visible = false
-		download_button.visible = false
-		label.text = 'Downloading cards. This may take a while...'
-		yield(get_tree(), "idle_frame")
-		timer.start()
-	else:
-		download_button.disabled = false
-
-
-
-func git_installed() -> bool:
-	var output = []
-	var exit_code := OS.execute('git', ['version'], true, output, true)
-	if exit_code != OK:
-		printerr('git check failed with code '+str(exit_code))
-		printerr(output)
-		OS.alert("Please install 'git' and try again!", 'Missing git!')
-		OS.shell_open('https://github.com/git-guides/install-git#install-git')
-		return false
-	return true
-
-
-func download_assets() -> void:
-	rm_rf(fs_path('user://cards'))
-	# TODO mer has higher quality, larger dimensions. But git clone takes forever and
-	# seems to often fail...
-	# var assets_path = git_clone_assets_from_mer()
-	var assets_path = git_clone_assets_from_meccges()
-	label.text = 'Building pck file from cards...'
-	yield(get_tree(), "idle_frame")
-	pack(assets_path)
+	download_button.visible = false
+	label.text = 'Downloading cards. This may take a while...'
+#	http_request.download_file = 'user://cards.zip'
+#	http_request.request('https://github.com/semaex/MeCCG-Windows-EN/archive/refs/heads/master.zip')
+	_on_HTTPRequest_request_completed(0, 0, [], []) # TODO don't explicitly call this
 
 
 func _on_GitMessage_meta_clicked(meta: String) -> void:
 	OS.shell_open(meta)
+
+
+func _on_HTTPRequest_request_completed(result: int, response_code: int, headers: PoolStringArray, body: PoolByteArray) -> void:
+	label.text = 'Unzipping files...'
+	yield(get_tree(), "idle_frame")
+
+	match OS.get_name():
+		'Windows':
+			run('rd /S /Q '+path)
+		_:
+			unix_like_unzip()
+
+	label.text = 'Building pck file from cards...'
+	yield(get_tree(), "idle_frame")
+	pack()
+
+func unix_like_unzip() -> void:
+	var output = []
+	var exit_code := OS.execute('unzip', [], true, output, true)
+	if exit_code != OK:
+		printerr('unzip check failed with code '+str(exit_code))
+		printerr(output)
+		OS.alert("Please install 'unzip' or manually unzip 'cards.zip' and run again!", 'Missing unzip!')
+		OS.shell_open(OS.get_user_data_dir())
+		get_tree().quit(1)

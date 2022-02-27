@@ -10,6 +10,8 @@ anchor_bottom = 1.0
 color = Color( 0.694118, 0.694118, 0.694118, 1 )
 script = ExtResource( 1 )
 
+[node name="HTTPRequest" type="HTTPRequest" parent="."]
+
 [node name="Timer" type="Timer" parent="."]
 one_shot = true
 
@@ -43,7 +45,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="GitMessage" type="RichTextLabel" parent="MarginContainer/VBoxContainer"]
+[node name="Message" type="RichTextLabel" parent="MarginContainer/VBoxContainer"]
 visible = false
 margin_top = 33.0
 margin_right = 1000.0
@@ -82,6 +84,7 @@ size_flags_horizontal = 4
 custom_fonts/font = ExtResource( 3 )
 text = "Download Assets"
 
+[connection signal="request_completed" from="HTTPRequest" to="." method="_on_HTTPRequest_request_completed"]
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
-[connection signal="meta_clicked" from="MarginContainer/VBoxContainer/GitMessage" to="." method="_on_GitMessage_meta_clicked"]
+[connection signal="meta_clicked" from="MarginContainer/VBoxContainer/Message" to="." method="_on_GitMessage_meta_clicked"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/DownloadButton" to="." method="_on_DownloadButton_pressed"]
