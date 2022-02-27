@@ -63,6 +63,7 @@ var ALL_DATA: Array = load_json_file('res://cards.json')
 var data: Array
 var total_cards: int
 var cur: int
+var cur_card_for_zooming: int
 var cur_section: DeckSection
 var clearing_filters := false
 
@@ -99,6 +100,7 @@ func reset() -> void:
 
 func show_results() -> void:
 	cur = 0
+	cur_card_for_zooming = 0
 	total_cards = data.size()
 	left.disabled = true
 	populate_grid_textures()
@@ -224,6 +226,7 @@ func _on_Card_dropped(dd: Dictionary) -> void:
 
 func _on_Left_pressed() -> void:
 	cur -= cards_per_page
+	cur_card_for_zooming = cur
 	update_current_page_number()
 	if cur <= 0:
 		left.disabled = true
@@ -234,6 +237,7 @@ func _on_Left_pressed() -> void:
 
 func _on_Right_pressed() -> void:
 	cur += cards_per_page
+	cur_card_for_zooming = cur
 	update_current_page_number()
 	if cur > 0:
 		left.disabled = false
@@ -471,7 +475,7 @@ func update_grid_zoom(zoom_levels: Array)-> void:
 	grid.columns = columns
 	card_rows = rows
 	card_columns = columns
-	cur = (cur / cards_per_page) * cards_per_page
+	cur = (cur_card_for_zooming / cards_per_page) * cards_per_page
 	update_current_page_number()
 	update_total_page_number()
 	initialize_grid()
