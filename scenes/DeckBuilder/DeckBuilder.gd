@@ -32,12 +32,19 @@ export(NodePath) onready var loadDialog = get_node(loadDialog) as FileDialog
 export(NodePath) onready var saveDialog = get_node(saveDialog) as FileDialog
 
 const ZOOM_LEVELS := [
-	[4, 4],
-	[3, 3],
-	[2, 2],
+	[10, 11],
+	[9, 11],
+	[9, 10],
+	[8, 9],
+	[7, 8],
+	[6, 7],
+	[5, 6],
+	[4, 5],
+	[3, 4],
+	[2, 3],
 	[1, 1],
 ]
-var cur_zoom_level := 1
+var cur_zoom_level: int = 9
 var card_rows: int = ZOOM_LEVELS[cur_zoom_level][0]
 var card_columns: int = ZOOM_LEVELS[cur_zoom_level][1]
 
@@ -60,6 +67,7 @@ var cur_section: DeckSection
 var clearing_filters := false
 
 func _ready() -> void:
+	init_zoom_button_state()
 	texture = Global.get_texture_from_cards_pck('background.png')
 	set_drag_forwarding_recursively(deck_list_card_drag_to_container)
 	grid.columns = card_columns
@@ -425,19 +433,32 @@ func _on_AllDecks_pressed() -> void:
 	OS.shell_open(ProjectSettings.globalize_path('user://decks'))
 
 
+func init_zoom_button_state() -> void:
+	maybe_disable_zoom_out()
+	maybe_disable_zoom_in()
+
+
+func maybe_disable_zoom_out() -> void:
+	if cur_zoom_level == 0:
+		zoom_out.disabled = true
+
+
+func maybe_disable_zoom_in() -> void:
+	if cur_zoom_level == ZOOM_LEVELS.size() - 1:
+		zoom_in.disabled = true
+
+
 func _on_ZoomOut_pressed() -> void:
 	cur_zoom_level -= 1
 	zoom_in.disabled = false
-	if cur_zoom_level == 0:
-		zoom_out.disabled = true
+	maybe_disable_zoom_out()
 	update_grid_zoom(ZOOM_LEVELS[cur_zoom_level])
 
 
 func _on_ZoomIn_pressed() -> void:
 	cur_zoom_level += 1
 	zoom_out.disabled = false
-	if cur_zoom_level == ZOOM_LEVELS.size() - 1:
-		zoom_in.disabled = true
+	maybe_disable_zoom_in()
 	update_grid_zoom(ZOOM_LEVELS[cur_zoom_level])
 
 

@@ -58,9 +58,6 @@ custom_constants/margin_right = 10
 custom_constants/margin_top = 10
 custom_constants/margin_left = 10
 custom_constants/margin_bottom = 10
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MainContainer"]
 margin_left = 10.0
@@ -191,8 +188,8 @@ margin_right = 723.0
 margin_bottom = 800.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-custom_constants/vseparation = 5
-custom_constants/hseparation = 5
+custom_constants/vseparation = 10
+custom_constants/hseparation = 10
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -278,16 +275,28 @@ margin_bottom = 34.0
 size_flags_horizontal = 3
 
 [node name="MarginContainer" type="MarginContainer" parent="MainContainer/HBoxContainer/Finder/VBoxContainer/HBoxContainer/HBoxContainer"]
-margin_right = 274.0
+margin_right = 215.0
 margin_bottom = 34.0
 size_flags_horizontal = 3
 
 [node name="ZoomOut" type="Button" parent="MainContainer/HBoxContainer/Finder/VBoxContainer/HBoxContainer/HBoxContainer"]
-margin_left = 278.0
-margin_right = 298.0
+margin_left = 219.0
+margin_right = 239.0
 margin_bottom = 34.0
 size_flags_horizontal = 8
 text = "-"
+
+[node name="PanelContainer" type="PanelContainer" parent="MainContainer/HBoxContainer/Finder/VBoxContainer/HBoxContainer/HBoxContainer"]
+margin_left = 243.0
+margin_right = 298.0
+margin_bottom = 34.0
+
+[node name="ZoomLabel" type="Label" parent="MainContainer/HBoxContainer/Finder/VBoxContainer/HBoxContainer/HBoxContainer/PanelContainer"]
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 50.0
+margin_bottom = 29.0
+text = "Zoom"
 
 [node name="ZoomIn" type="Button" parent="MainContainer/HBoxContainer/Finder/VBoxContainer/HBoxContainer/HBoxContainer"]
 margin_left = 302.0
