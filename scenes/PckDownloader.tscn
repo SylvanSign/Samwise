@@ -79,5 +79,5 @@ text = "Download Assets"
 
 [connection signal="request_completed" from="HTTPRequest" to="." method="_on_HTTPRequest_request_completed"]
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
-[connection signal="meta_clicked" from="MarginContainer/VBoxContainer/Message" to="." method="_on_GitMessage_meta_clicked"]
+[connection signal="meta_clicked" from="MarginContainer/VBoxContainer/Message" to="." method="_on_Message_meta_clicked"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/DownloadButton" to="." method="_on_DownloadButton_pressed"]

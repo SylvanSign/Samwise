@@ -194,5 +194,5 @@ func run(path: String, args: Array) -> bool:
 		return true
 
 
-func _on_GitMessage_meta_clicked(meta: String) -> void:
+func _on_Message_meta_clicked(meta: String) -> void:
 	OS.shell_open(meta)
