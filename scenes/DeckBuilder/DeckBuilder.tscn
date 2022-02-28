@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://scenes/DeckBuilder/DeckBuilder.gd" type="Script" id=2]
 [ext_resource path="res://scenes/DeckBuilder/Preview.tscn" type="PackedScene" id=3]
@@ -10,6 +10,7 @@
 [ext_resource path="res://scenes/DeckBuilder/DeckList/DeckListCardFont.tres" type="DynamicFont" id=9]
 [ext_resource path="res://scenes/DeckBuilder/Cardnum/ImportCardnumPopup.tscn" type="PackedScene" id=10]
 [ext_resource path="res://scenes/DeckBuilder/DeckBuilderTheme.tres" type="Theme" id=11]
+[ext_resource path="res://scenes/DeckBuilder/Map.gd" type="Script" id=12]
 
 [node name="DeckBuilder" type="TextureRect"]
 anchor_right = 1.0
@@ -48,6 +49,7 @@ fw_dc_sb = NodePath("MainContainer/HBoxContainer/DeckList/Sections/Bottom/VBoxCo
 sites = NodePath("MainContainer/HBoxContainer/DeckList/Sections/Bottom/VBoxContainer/Sites")
 loadDialog = NodePath("LoadDialog")
 saveDialog = NodePath("SaveDialog")
+map = NodePath("Map")
 
 [node name="MainContainer" type="MarginContainer" parent="."]
 anchor_right = 1.0
@@ -86,31 +88,31 @@ margin_right = 768.0
 margin_bottom = 34.0
 
 [node name="Name" type="LineEdit" parent="MainContainer/HBoxContainer/Finder/Filters/Primary/HBoxContainer"]
-margin_right = 126.0
+margin_right = 138.0
 margin_bottom = 34.0
 size_flags_horizontal = 3
 clear_button_enabled = true
 placeholder_text = "by Name"
 
 [node name="Text" type="LineEdit" parent="MainContainer/HBoxContainer/Finder/Filters/Primary/HBoxContainer"]
-margin_left = 130.0
-margin_right = 256.0
+margin_left = 142.0
+margin_right = 280.0
 margin_bottom = 34.0
 size_flags_horizontal = 3
 clear_button_enabled = true
 placeholder_text = "by Text"
 
 [node name="Quote" type="LineEdit" parent="MainContainer/HBoxContainer/Finder/Filters/Primary/HBoxContainer"]
-margin_left = 260.0
-margin_right = 386.0
+margin_left = 284.0
+margin_right = 422.0
 margin_bottom = 34.0
 size_flags_horizontal = 3
 clear_button_enabled = true
 placeholder_text = "by Quote"
 
 [node name="Set" type="OptionButton" parent="MainContainer/HBoxContainer/Finder/Filters/Primary/HBoxContainer"]
-margin_left = 390.0
-margin_right = 516.0
+margin_left = 426.0
+margin_right = 564.0
 margin_bottom = 34.0
 size_flags_horizontal = 3
 text = "All Sets"
@@ -120,8 +122,8 @@ __meta__ = {
 }
 
 [node name="Type" type="OptionButton" parent="MainContainer/HBoxContainer/Finder/Filters/Primary/HBoxContainer"]
-margin_left = 520.0
-margin_right = 646.0
+margin_left = 568.0
+margin_right = 706.0
 margin_bottom = 34.0
 size_flags_horizontal = 3
 text = "All Types"
@@ -131,11 +133,11 @@ __meta__ = {
 }
 
 [node name="ClearFiltersButton" type="Button" parent="MainContainer/HBoxContainer/Finder/Filters/Primary/HBoxContainer"]
-margin_left = 650.0
-margin_right = 768.0
+margin_left = 710.0
+margin_right = 767.0
 margin_bottom = 34.0
 rect_min_size = Vector2( 0, 34 )
-text = "Clear Filters"
+text = "Reset"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -343,40 +345,52 @@ text = "Load"
 
 [node name="ClearDeck" type="Button" parent="MainContainer/HBoxContainer/DeckList/Sections/SectionButtons"]
 margin_left = 117.0
-margin_right = 218.0
+margin_right = 174.0
 margin_bottom = 34.0
 size_flags_horizontal = 0
-text = "Clear Deck"
+text = "Clear"
 
 [node name="AllDecks" type="Button" parent="MainContainer/HBoxContainer/DeckList/Sections/SectionButtons"]
-margin_left = 228.0
-margin_right = 361.0
+margin_left = 184.0
+margin_right = 274.0
 margin_bottom = 34.0
-text = "All Your Decks"
+text = "All Decks"
+
+[node name="MapSpace" type="MarginContainer" parent="MainContainer/HBoxContainer/DeckList/Sections/SectionButtons"]
+margin_left = 284.0
+margin_right = 294.0
+margin_bottom = 34.0
+size_flags_horizontal = 3
+
+[node name="Map" type="Button" parent="MainContainer/HBoxContainer/DeckList/Sections/SectionButtons"]
+margin_left = 304.0
+margin_right = 349.0
+margin_bottom = 34.0
+text = "Map"
 
 [node name="CardnumSpacer" type="MarginContainer" parent="MainContainer/HBoxContainer/DeckList/Sections/SectionButtons"]
-margin_left = 371.0
-margin_right = 375.0
+margin_left = 359.0
+margin_right = 369.0
 margin_bottom = 34.0
 size_flags_horizontal = 3
 
 [node name="ImportFromCardnum" type="Button" parent="MainContainer/HBoxContainer/DeckList/Sections/SectionButtons"]
-margin_left = 385.0
-margin_right = 512.0
+margin_left = 379.0
+margin_right = 506.0
 margin_bottom = 34.0
 rect_min_size = Vector2( 0, 32 )
 size_flags_horizontal = 0
 text = "Load Cardnum"
 
 [node name="ExportForCardnum" type="Button" parent="MainContainer/HBoxContainer/DeckList/Sections/SectionButtons"]
-margin_left = 522.0
-margin_right = 642.0
+margin_left = 516.0
+margin_right = 636.0
 margin_bottom = 34.0
 size_flags_horizontal = 0
 text = "Save Cardnum"
 
 [node name="FullScreenSpacer" type="MarginContainer" parent="MainContainer/HBoxContainer/DeckList/Sections/SectionButtons"]
-margin_left = 652.0
+margin_left = 646.0
 margin_right = 656.0
 margin_bottom = 34.0
 size_flags_horizontal = 3
@@ -559,6 +573,30 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="Map" type="WindowDialog" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -512.0
+margin_top = -364.5
+margin_right = 512.0
+margin_bottom = 364.5
+mouse_filter = 1
+window_title = "Middle Earth"
+script = ExtResource( 12 )
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Map"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="TextureRect" type="TextureRect" parent="Map/ScrollContainer"]
+margin_right = 1024.0
+margin_bottom = 729.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+stretch_mode = 6
+
 [connection signal="gui_input" from="." to="." method="_on_DeckBuilder_gui_input"]
 [connection signal="resized" from="." to="." method="_on_DeckBuilder_resized"]
 [connection signal="text_changed" from="MainContainer/HBoxContainer/Finder/Filters/Primary/HBoxContainer/Name" to="." method="_on_Name_text_changed"]
@@ -578,6 +616,7 @@ __meta__ = {
 [connection signal="pressed" from="MainContainer/HBoxContainer/DeckList/Sections/SectionButtons/Load" to="." method="_on_Load_pressed"]
 [connection signal="pressed" from="MainContainer/HBoxContainer/DeckList/Sections/SectionButtons/ClearDeck" to="." method="_on_ClearDeck_pressed"]
 [connection signal="pressed" from="MainContainer/HBoxContainer/DeckList/Sections/SectionButtons/AllDecks" to="." method="_on_AllDecks_pressed"]
+[connection signal="pressed" from="MainContainer/HBoxContainer/DeckList/Sections/SectionButtons/Map" to="." method="_on_Map_pressed"]
 [connection signal="pressed" from="MainContainer/HBoxContainer/DeckList/Sections/SectionButtons/ImportFromCardnum" to="." method="_on_ImportFromCardnum_pressed"]
 [connection signal="pressed" from="MainContainer/HBoxContainer/DeckList/Sections/SectionButtons/ExportForCardnum" to="." method="_on_ExportForCardnum_pressed"]
 [connection signal="pressed" from="MainContainer/HBoxContainer/DeckList/Sections/SectionButtons/FullScreen" to="." method="_on_FullScreen_pressed"]

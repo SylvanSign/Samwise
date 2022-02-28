@@ -31,6 +31,8 @@ export(NodePath) onready var sites = get_node(sites) as DeckSection
 export(NodePath) onready var loadDialog = get_node(loadDialog) as FileDialog
 export(NodePath) onready var saveDialog = get_node(saveDialog) as FileDialog
 
+export(NodePath) onready var map = get_node(map) as Map
+
 const ZOOM_LEVELS := [
 	[10, 11],
 	[9, 11],
@@ -480,3 +482,7 @@ func update_grid_zoom(zoom_levels: Array)-> void:
 	update_total_page_number()
 	initialize_grid()
 	populate_grid_textures()
+
+
+func _on_Map_pressed() -> void:
+	map.show()
