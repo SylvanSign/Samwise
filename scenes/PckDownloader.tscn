@@ -49,24 +49,16 @@ __meta__ = {
 visible = false
 margin_top = 33.0
 margin_right = 1000.0
-margin_bottom = 159.0
+margin_bottom = 75.0
 size_flags_horizontal = 3
 custom_colors/default_color = Color( 0, 0, 0, 1 )
 custom_fonts/normal_font = ExtResource( 3 )
 bbcode_enabled = true
 bbcode_text = "[center]
 assets source [color=blue][url]https://github.com/semaex/MeCCG-Windows-EN/tree/master/metw/graphics/Metw[/url][/color]
-
-
-
-Please make sure you have git installed [color=blue][url]https://github.com/git-guides/install-git#install-git[/url][/color]
 [/center]"
 text = "
 assets source https://github.com/semaex/MeCCG-Windows-EN/tree/master/metw/graphics/Metw
-
-
-
-Please make sure you have git installed https://github.com/git-guides/install-git#install-git
 "
 fit_content_height = true
 __meta__ = {
