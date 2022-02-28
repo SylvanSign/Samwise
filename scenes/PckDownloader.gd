@@ -94,10 +94,12 @@ func unzip() -> void:
 
 	match OS.get_name():
 		'Windows':
-			report_error_and_quit("Please manually extract/unzip 'cards.zip' to 'cards/', then run Samwise again!")
+			if !run('cmd.exe', ['/C cd '+fs_path('user://')+' && tar -xf cards.zip && mkdir cards && move MeCCG-Windows-EN-master cards']) \
+				and !run('powershell.exe', ['-Command', '"Expand-Archive -Force '+fs_path('user://cards.zip')+' '+fs_path('user://cards') + '"']):
+				report_error_and_quit("Please manually extract 'cards.zip' to 'cards\', then run Samwise again!")
 		_:
-			if !run('unzip '+fs_path('user://cards.zip')+' -d '+fs_path('user://cards')):
-				report_error_and_quit("Please install 'unzip' or manually extract/unzip 'cards.zip' to 'cards/', then run Samwise again!")
+			if !run('unzip', [fs_path('user://cards.zip'), '-d', fs_path('user://cards')]):
+				report_error_and_quit("Please install 'unzip' or manually extract 'cards.zip' to 'cards/', then run Samwise again!")
 
 	pack()
 
@@ -158,17 +160,17 @@ func pack_helper(packer: PCKPacker, fs_path: String, pack_path: String) -> void:
 func rm(path: String) -> void:
 	match OS.get_name():
 		'Windows':
-			run('del '+path)
+			run('del', [path])
 		_:
-			run('rm -f '+path)
+			run('rm', ['-f', path])
 
 
 func rm_rf(path: String) -> void:
 	match OS.get_name():
 		'Windows':
-			run('rd /S /Q '+path)
+			run('rd', ['/S', '/Q', path])
 		_:
-			run('rm -rf '+path)
+			run('rm', ['-rf', path])
 
 
 func fs_path(path: String) -> String:
@@ -180,14 +182,12 @@ func fs_path(path: String) -> String:
 			return globalized_path
 
 
-func run(command: String) -> bool:
-	var args := Array(command.split(' ', false))
-	var path = args.pop_front()
-
+func run(path: String, args: Array) -> bool:
+	print('Running ', path, ' ', args)
 	var output = []
 	var exit_code := OS.execute(path, args, true, output, true)
 	if exit_code != OK:
-		printerr('Command '+command+' failed with code '+str(exit_code))
+		printerr('Command ', path, ' ', args, ' failed with code ', exit_code)
 		printerr(output)
 		return false
 	else:
