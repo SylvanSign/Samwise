@@ -94,10 +94,10 @@ func unzip() -> void:
 
 	match OS.get_name():
 		'Windows':
-			pass
+			report_error_and_quit("Please manually extract/unzip 'cards.zip' to 'cards/', then run Samwise again!")
 		_:
 			if !run('unzip '+fs_path('user://cards.zip')+' -d '+fs_path('user://cards')):
-				report_error_and_quit("Please install 'unzip' or manually unzip 'cards.zip', then run Samwise again!")
+				report_error_and_quit("Please install 'unzip' or manually extract/unzip 'cards.zip' to 'cards/', then run Samwise again!")
 
 	pack()
 
@@ -122,7 +122,7 @@ func pack() -> void:
 		report_error_and_quit('Error: '+str(error)+'Failed to packer.flush(true)')
 		return
 
-	rm_rf(fs_path(GIT_ZIPPED))
+	rm(fs_path(GIT_ZIPPED))
 	rm_rf(fs_path(GIT_UNZIPPED))
 	check_for_cards()
 
@@ -153,6 +153,14 @@ func pack_helper(packer: PCKPacker, fs_path: String, pack_path: String) -> void:
 				report_error_and_quit('Error: '+str(error)+' Failed to packer.add_file('+resource_path+', '+file_path+')')
 				return
 		file_name = dir.get_next()
+
+
+func rm(path: String) -> void:
+	match OS.get_name():
+		'Windows':
+			run('del '+path)
+		_:
+			run('rm -f '+path)
 
 
 func rm_rf(path: String) -> void:
