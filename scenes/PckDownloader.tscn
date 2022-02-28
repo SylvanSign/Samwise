@@ -48,7 +48,6 @@ __meta__ = {
 }
 
 [node name="Message" type="RichTextLabel" parent="MarginContainer/VBoxContainer"]
-visible = false
 margin_top = 33.0
 margin_right = 1000.0
 margin_bottom = 75.0

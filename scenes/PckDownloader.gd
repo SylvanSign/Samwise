@@ -3,7 +3,6 @@ extends Control
 onready var http_request := $HTTPRequest
 onready var timer := $Timer
 onready var label := $MarginContainer/VBoxContainer/Label
-onready var message := $MarginContainer/VBoxContainer/Message
 onready var download_button := $MarginContainer/VBoxContainer/DownloadButton
 
 const CARDS_PCK := 'user://cards.pck'
@@ -24,88 +23,135 @@ func setup_decks_dir() -> void:
 	if dir.dir_exists(CHALLENGE_DECKS):
 		return
 
-	if OK != dir.open(BUNDLED_DECKS):
-		printerr('Error opening ', BUNDLED_DECKS)
+	var error := dir.open(BUNDLED_DECKS)
+	if error:
+		printerr('Error: ', error, ' Failed to dir.open(', BUNDLED_DECKS, ')')
 		return
 
-	dir.make_dir_recursive(CHALLENGE_DECKS)
-	dir.list_dir_begin(true, true)
+	error = dir.make_dir_recursive(CHALLENGE_DECKS)
+	if error:
+		printerr('Error: ', error, ' Failed to dir.make_dir_recursive(', CHALLENGE_DECKS, ')')
+		return
+
+	error = dir.list_dir_begin(true, true)
+	if error:
+		printerr('Error: ', error, ' Failed to dir.list_dir_begin(true, true)')
+		return
+
 	var deck = dir.get_next()
 	while deck != "":
-		if OK != dir.copy(BUNDLED_DECKS.plus_file(deck), CHALLENGE_DECKS.plus_file(deck)):
-			printerr('Error copying ', deck)
+		error = dir.copy(BUNDLED_DECKS.plus_file(deck), CHALLENGE_DECKS.plus_file(deck))
+		if error:
+			printerr('Error: ', error, ' dir.copy(', BUNDLED_DECKS.plus_file(deck), ', ', CHALLENGE_DECKS.plus_file(deck), ')')
 		deck = dir.get_next()
+
+
+func report_error_and_quit(error: String) -> void:
+	printerr(error)
+	OS.alert(error)
+	OS.shell_open(OS.get_user_data_dir())
+	get_tree().quit(1)
 
 
 func check_for_cards() -> void:
 	if ProjectSettings.load_resource_pack(CARDS_PCK):
 		get_tree().change_scene("res://scenes/DeckBuilder/DeckBuilder.tscn")
 	else:
-		label.text = 'Missing card assets. Would you like to download them?'
-		message.visible = true
-		download_button.visible = true
+		var dir := Directory.new()
+		var error := dir.open('user://')
+		if error:
+			report_error_and_quit('Error: '+str(error)+" Failed to dir.open('user://')")
+		else:
+			if dir.dir_exists('cards'):
+				print('files already downloaded and unzipped')
+				pack()
+			elif dir.file_exists('cards.zip'):
+				print('already downloaded cards.zip, but need to unzip...')
+				unzip()
+			else:
+				print('need to download cards, so prompting the user...')
+				label.text = 'Missing card assets. Would you like to download them?'
+				download_button.visible = true
 
 
 func _on_DownloadButton_pressed() -> void:
 	download_button.visible = false
-	if Directory.new().file_exists('user://cards.zip'):
-		print('already downloaded cards.zip, so need to unzip...')
-		_on_HTTPRequest_request_completed(0, 200, [], []) # TODO this is a bit ugly...
-	else:
-		label.text = 'Downloading cards. This may take a while...'
-		http_request.request('https://github.com/semaex/MeCCG-Windows-EN/archive/refs/heads/master.zip')
+	label.text = 'Downloading cards. This may take a while...'
+	http_request.request('https://github.com/semaex/MeCCG-Windows-EN/archive/refs/heads/master.zip')
 
 
 func _on_HTTPRequest_request_completed(_result: int, response_code: int, _headers: PoolStringArray, _body: PoolByteArray) -> void:
 	if response_code != 200:
-		var err_msg := 'Got HTTP response ' + str(response_code)
-		printerr(err_msg)
-		OS.alert(err_msg, 'Bad HTTP response')
-		get_tree().quit(1)
+		var error := 'Got HTTP response ' + str(response_code)
+		report_error_and_quit(error)
 	else:
-		if Directory.new().file_exists('user://cards'):
-			print('files already unzipped')
-		else:
-			label.text = 'Unzipping files...'
-			yield(get_tree().create_timer(0.3), "timeout")
+		unzip()
 
-			match OS.get_name():
-				'Windows':
-					pass
-				_:
-					if !run('unzips '+fs_path('user://cards.zip')+' -d '+fs_path('user://cards')):
-						OS.alert("Please install 'unzip' or manually unzip 'cards.zip' and run again!", 'Failed to unzip!')
-						OS.shell_open(OS.get_user_data_dir())
-						get_tree().quit(1)
 
-			label.text = 'Building pck file from cards...'
-			yield(get_tree().create_timer(0.3), "timeout")
-		pack()
+func unzip() -> void:
+	label.text = 'Unzipping files...'
+	yield(get_tree().create_timer(0.3), "timeout")
+
+	match OS.get_name():
+		'Windows':
+			pass
+		_:
+			if !run('unzip '+fs_path('user://cards.zip')+' -d '+fs_path('user://cards')):
+				report_error_and_quit("Please install 'unzip' or manually unzip 'cards.zip', then run Samwise again!")
+
+	pack()
+
 
 
 
 func pack() -> void:
-	var packer = PCKPacker.new()
-	assert(OK == packer.pck_start(CARDS_PCK))
+	label.text = 'Building pck file from cards...'
+	yield(get_tree().create_timer(0.3), "timeout")
+
+	var packer := PCKPacker.new()
+
+	var error := packer.pck_start(CARDS_PCK)
+	if error:
+		report_error_and_quit('Error: '+str(error)+'Failed to packer.pck_start('+CARDS_PCK+')')
+		return
+
 	pack_helper(packer, GIT_ASSET_DIR_PATH, CARDS_RES_LOCATION)
-	assert(OK == packer.flush(true))
+
+	error = packer.flush(true)
+	if error:
+		report_error_and_quit('Error: '+str(error)+'Failed to packer.flush(true)')
+		return
+
 	rm_rf(fs_path(GIT_ZIPPED))
 	rm_rf(fs_path(GIT_UNZIPPED))
 	check_for_cards()
 
 
+
 func pack_helper(packer: PCKPacker, fs_path: String, pack_path: String) -> void:
-	var dir = Directory.new()
-	assert(OK == dir.open(fs_path))
-	dir.list_dir_begin(true, true)
-	var file_name = dir.get_next()
+	var dir := Directory.new()
+
+	var error := dir.open(fs_path)
+	if error:
+		report_error_and_quit('Error: '+str(error)+' Failed to dir.open('+fs_path+')')
+		return
+
+	error = dir.list_dir_begin(true, true)
+	if error:
+		report_error_and_quit('Error: '+str(error)+' Failed to dir.list_dir_begin(true, true)')
+		return
+
+	var file_name := dir.get_next()
 	while file_name != "":
-		var file_path = fs_path.plus_file(file_name)
-		var resource_path = pack_path.plus_file(file_name)
+		var file_path := fs_path.plus_file(file_name)
+		var resource_path := pack_path.plus_file(file_name)
 		if dir.current_is_dir():
 			pack_helper(packer, file_path, resource_path)
 		else:
-			assert(OK == packer.add_file(resource_path, file_path))
+			error = packer.add_file(resource_path, file_path)
+			if error:
+				report_error_and_quit('Error: '+str(error)+' Failed to packer.add_file('+resource_path+', '+file_path+')')
+				return
 		file_name = dir.get_next()
 
 
