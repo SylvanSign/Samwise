@@ -8,7 +8,9 @@ func _process(delta: float) -> void:
 	position += input * speed * zoom * delta
 
 func _input(event: InputEvent) -> void:
-	if event.is_action_pressed('ui_left'):
+	# zoom in
+	if event.is_action_pressed('scroll_up'):
 		zoom /= zoom_factor
-	elif event.is_action_pressed('ui_right'):
+	# zoom out
+	elif event.is_action_pressed('scroll_down'):
 		zoom *= zoom_factor

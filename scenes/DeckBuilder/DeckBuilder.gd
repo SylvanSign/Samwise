@@ -249,9 +249,9 @@ func _on_Right_pressed() -> void:
 
 
 func _on_DeckBuilder_gui_input(event: InputEvent) -> void:
-	if event.is_action_pressed("ui_right") and not right.disabled:
+	if event.is_action_pressed("scroll_down") and not right.disabled:
 		_on_Right_pressed()
-	elif event.is_action_pressed("ui_left") and not left.disabled:
+	elif event.is_action_pressed("scroll_up") and not left.disabled:
 		_on_Left_pressed()
 
 
