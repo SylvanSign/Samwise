@@ -4,4 +4,6 @@
 
 [node name="Player" type="Camera2D"]
 current = true
+smoothing_enabled = true
+smoothing_speed = 10.0
 script = ExtResource( 1 )
