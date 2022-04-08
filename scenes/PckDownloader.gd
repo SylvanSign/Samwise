@@ -55,7 +55,8 @@ func report_error_and_quit(error: String) -> void:
 
 func check_for_cards() -> void:
 	if ProjectSettings.load_resource_pack(CARDS_PCK):
-		get_tree().change_scene("res://scenes/DeckBuilder/DeckBuilder.tscn")
+#		get_tree().change_scene("res://scenes/DeckBuilder/DeckBuilder.tscn")
+		get_tree().change_scene("res://scenes/Sandbox/Main.tscn")
 	else:
 		var dir := Directory.new()
 		var error := dir.open('user://')
@@ -65,8 +66,8 @@ func check_for_cards() -> void:
 			if dir.dir_exists('cards'):
 				print('files already downloaded and unzipped')
 				pack()
-			elif dir.file_exists('cards.zip'):
 				print('already downloaded cards.zip, but need to unzip...')
+			elif dir.file_exists('cards.zip'):
 				unzip()
 			else:
 				print('need to download cards, so prompting the user...')
