@@ -9,3 +9,4 @@ export.cfg
 data_*/
 
 builds/
+export_presets.cfg
