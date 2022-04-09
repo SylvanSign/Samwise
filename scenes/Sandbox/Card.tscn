@@ -3,10 +3,9 @@
 [ext_resource path="res://scenes/Sandbox/Card.gd" type="Script" id=1]
 
 [node name="Card" type="TextureRect"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_right = -1180.0
-margin_bottom = -313.0
+margin_right = 420.0
+margin_bottom = 587.0
+rect_min_size = Vector2( 420, 587 )
 rect_pivot_offset = Vector2( 210, 293 )
 focus_mode = 2
 script = ExtResource( 1 )

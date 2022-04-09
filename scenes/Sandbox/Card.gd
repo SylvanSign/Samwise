@@ -3,8 +3,10 @@ extends TextureRect
 var dragging := false
 var dragging_offset: Vector2
 
+export(String) var path := 'Wizards/SamGamgee.jpg'
+
 func _ready() -> void:
-	texture = Global.get_texture_from_cards_pck('Wizards/Pallando.jpg')
+	texture = Global.get_texture_from_cards_pck(path)
 
 func _process(delta: float) -> void:
 	if dragging:
@@ -20,10 +22,22 @@ func _gui_input(event: InputEvent) -> void:
 		rect_rotation -= 90
 	elif event.is_action_pressed('rotate_right'):
 		rect_rotation += 90
+	elif event.is_action_pressed('send_to_back'):
+		send_to_back()
+	elif event.is_action_pressed('bring_to_front'):
+		bring_to_front()
 	else:
 		return
 
 	accept_event()
+
+func bring_to_front() -> void:
+	var parent := get_parent()
+	parent.move_child(self, parent.get_child_count() - 1)
+
+func send_to_back() -> void:
+	var parent := get_parent()
+	parent.move_child(self, 0)
 
 func _on_Card_mouse_entered() -> void:
 	grab_focus()
