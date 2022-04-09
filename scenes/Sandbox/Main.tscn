@@ -25,12 +25,14 @@ margin_left = 706.0
 margin_top = 155.0
 margin_right = 1126.0
 margin_bottom = 742.0
+path = "Wizards/AragornII.jpg"
 
 [node name="Card3" parent="Cards" instance=ExtResource( 1 )]
 margin_left = 346.0
 margin_top = 202.0
 margin_right = 766.0
 margin_bottom = 789.0
+path = "Wizards/Ford.jpg"
 
 [node name="Player" parent="." instance=ExtResource( 2 )]
 position = Vector2( 800, 450 )
