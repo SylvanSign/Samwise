@@ -28,7 +28,6 @@ func _gui_input(event: InputEvent) -> void:
 		bring_to_front()
 	else:
 		return
-
 	accept_event()
 
 func bring_to_front() -> void:
@@ -38,6 +37,15 @@ func bring_to_front() -> void:
 func send_to_back() -> void:
 	var parent := get_parent()
 	parent.move_child(self, 0)
+	# TODO is there a better way to make "cards above this one" grab focus?
+	var mousePos =  get_global_mouse_position()
+	var children = get_parent().get_children()
+	children.invert()
+	for node in children:
+		if node.get_global_rect().has_point(mousePos):
+			print(node.path)
+			node.grab_focus()
+			break
 
 func _on_Card_mouse_entered() -> void:
 	grab_focus()

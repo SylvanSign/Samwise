@@ -34,6 +34,23 @@ margin_right = 766.0
 margin_bottom = 789.0
 path = "Wizards/Ford.jpg"
 
+[node name="Card4" parent="Cards" instance=ExtResource( 1 )]
+path = "Wizards/BoromirII.jpg"
+
+[node name="Card5" parent="Cards" instance=ExtResource( 1 )]
+margin_left = 706.0
+margin_top = 155.0
+margin_right = 1126.0
+margin_bottom = 742.0
+path = "Wizards/Sting.jpg"
+
+[node name="Card6" parent="Cards" instance=ExtResource( 1 )]
+margin_left = 346.0
+margin_top = 202.0
+margin_right = 766.0
+margin_bottom = 789.0
+path = "Wizards/Radagast.jpg"
+
 [node name="Player" parent="." instance=ExtResource( 2 )]
 position = Vector2( 800, 450 )
 zoom = Vector2( 2, 2 )
