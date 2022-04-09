@@ -1,12 +1,13 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://scenes/Sandbox/Card.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/Sandbox/Player.tscn" type="PackedScene" id=2]
+[ext_resource path="res://scenes/Sandbox/Main.gd" type="Script" id=3]
 
-[node name="Main" type="ColorRect"]
+[node name="Main" type="TextureRect"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-color = Color( 0.403922, 0.235294, 0.054902, 1 )
+script = ExtResource( 3 )
 __meta__ = {
 "_edit_lock_": true
 }
