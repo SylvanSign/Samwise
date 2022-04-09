@@ -22,7 +22,7 @@ func _input(event: InputEvent) -> void:
 		panning = false
 	elif panning and event is InputEventMouseMotion:
 		position += event.relative * speed * zoom * get_process_delta_time()
-	else:
-		return
-
-	get_tree().set_input_as_handled()
+#	else:
+#		return
+#
+#	get_tree().set_input_as_handled()

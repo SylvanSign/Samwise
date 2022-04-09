@@ -2,18 +2,14 @@
 
 [ext_resource path="res://scenes/Sandbox/Card.gd" type="Script" id=1]
 
-[node name="Card" type="AspectRatioContainer"]
+[node name="Card" type="TextureRect"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_right = -1496.0
-margin_bottom = -754.0
-ratio = 0.716
+margin_right = -1180.0
+margin_bottom = -313.0
+rect_pivot_offset = Vector2( 210, 293 )
+focus_mode = 2
 script = ExtResource( 1 )
 
-[node name="TextureRect" type="TextureRect" parent="."]
-margin_top = 0.374306
-margin_right = 104.0
-margin_bottom = 145.626
-rect_min_size = Vector2( 104, 145.251 )
-expand = true
-stretch_mode = 5
+[connection signal="mouse_entered" from="." to="." method="_on_Card_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_Card_mouse_exited"]
