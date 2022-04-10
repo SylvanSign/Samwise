@@ -32,7 +32,7 @@ func _gui_input(event: InputEvent) -> void:
 
 func bring_to_front() -> void:
 	var parent := get_parent()
-	parent.move_child(self, parent.get_child_count() - 1)
+	raise()
 
 func send_to_back() -> void:
 	var parent := get_parent()
