@@ -2,6 +2,7 @@ extends TextureRect
 
 var dragging := false
 var dragging_offset: Vector2
+var flipped := false
 
 export(String) var path := 'Wizards/SamGamgee.jpg'
 
@@ -26,6 +27,12 @@ func _gui_input(event: InputEvent) -> void:
 		send_to_back()
 	elif event.is_action_pressed('bring_to_front'):
 		bring_to_front()
+	elif event.is_action_pressed('flip'):
+		if flipped:
+			texture = Global.get_texture_from_cards_pck(path)
+		else:
+			texture = Global.get_texture_from_cards_pck('metw-back.jpg')
+		flipped = not flipped
 	else:
 		return
 	accept_event()

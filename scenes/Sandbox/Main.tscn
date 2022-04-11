@@ -19,6 +19,7 @@ margin_bottom = 40.0
 [node name="Cards" type="Node" parent="."]
 
 [node name="Card" parent="Cards" instance=ExtResource( 1 )]
+rect_scale = Vector2( 0.5, 0.5 )
 
 [node name="Card2" parent="Cards" instance=ExtResource( 1 )]
 margin_left = 706.0
