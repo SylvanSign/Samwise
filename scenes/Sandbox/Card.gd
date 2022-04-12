@@ -37,12 +37,7 @@ func _gui_input(event: InputEvent) -> void:
 	elif event.is_action_pressed('bring_to_front'):
 		bring_to_front()
 	elif event.is_action_pressed('flip'):
-		if flipped:
-			texture = Global.get_texture_from_cards_pck(path)
-		else:
-			var path := SITE_BACK if type == TYPE.SITE else BACK
-			texture = Global.get_texture_from_cards_pck(path)
-		flipped = not flipped
+		flip()
 	else:
 		return
 	accept_event()
@@ -63,6 +58,14 @@ func send_to_back() -> void:
 			print(node.path)
 			node.grab_focus()
 			break
+
+func flip() -> void:
+	if flipped:
+		texture = Global.get_texture_from_cards_pck(path)
+	else:
+		var path := SITE_BACK if type == TYPE.SITE else BACK
+		texture = Global.get_texture_from_cards_pck(path)
+	flipped = not flipped
 
 func _on_Card_mouse_entered() -> void:
 	grab_focus()

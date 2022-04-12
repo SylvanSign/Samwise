@@ -1,5 +1,7 @@
 extends Camera2D
 
+signal selection(rect)
+
 export(int) var speed := 1000
 export(float) var zoom_factor := 1.5
 
@@ -15,10 +17,19 @@ func _process(delta: float) -> void:
 
 func _draw() -> void:
 	if selecting:
-		var rect := Rect2()
-		rect.position = select_start
-		rect.end = get_local_mouse_position()
-		draw_rect(rect, Color.white, false)
+		draw_rect(local_selection_rect(), Color.white, false)
+
+func local_selection_rect() -> Rect2:
+	var rect := Rect2()
+	rect.position = to_local(select_start)
+	rect.end = get_local_mouse_position()
+	return rect
+
+func global_selection_rect() -> Rect2:
+	var rect := Rect2()
+	rect.position = select_start
+	rect.end = get_global_mouse_position()
+	return rect
 
 func _unhandled_input(event: InputEvent) -> void:
 	# zoom in
@@ -36,11 +47,11 @@ func _unhandled_input(event: InputEvent) -> void:
 		if select_start:
 			update()
 	elif event.is_action_pressed('click'):
-		print('hi')
 		selecting = true
-		select_start = get_local_mouse_position()
+		select_start = get_global_mouse_position()
 	elif event.is_action_released('click'):
 		if selecting:
+			emit_signal('selection', global_selection_rect())
 			selecting = false
 			update()
 #	else:

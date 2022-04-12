@@ -61,3 +61,5 @@ type = 0
 [node name="Player" parent="." instance=ExtResource( 2 )]
 position = Vector2( 800, 450 )
 zoom = Vector2( 2, 2 )
+
+[connection signal="selection" from="Player" to="." method="_on_Player_selection"]
