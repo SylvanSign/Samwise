@@ -15,5 +15,5 @@ func get_texture_from_cards_pck(path: String) -> Texture:
 	var image := Image.new()
 	image.load('res://cards'.plus_file(path))
 	var texture := ImageTexture.new()
-	texture.create_from_image(image, ImageTexture.FLAG_FILTER)
+	texture.create_from_image(image)
 	return texture

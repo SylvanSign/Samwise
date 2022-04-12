@@ -1,10 +1,19 @@
 extends TextureRect
 
+const BACK := 'metw-back.jpg'
+const SITE_BACK := 'site-back.jpg'
+
+enum TYPE {
+	SITE,
+	OTHER,
+}
+
+export(String) var path := 'Wizards/SamGamgee.jpg'
+export(TYPE) var type := TYPE.OTHER
+
 var dragging := false
 var dragging_offset: Vector2
 var flipped := false
-
-export(String) var path := 'Wizards/SamGamgee.jpg'
 
 func _ready() -> void:
 	texture = Global.get_texture_from_cards_pck(path)
@@ -31,7 +40,8 @@ func _gui_input(event: InputEvent) -> void:
 		if flipped:
 			texture = Global.get_texture_from_cards_pck(path)
 		else:
-			texture = Global.get_texture_from_cards_pck('metw-back.jpg')
+			var path := SITE_BACK if type == TYPE.SITE else BACK
+			texture = Global.get_texture_from_cards_pck(path)
 		flipped = not flipped
 	else:
 		return
