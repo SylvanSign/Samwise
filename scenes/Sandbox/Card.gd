@@ -14,9 +14,15 @@ export(TYPE) var type := TYPE.OTHER
 var dragging := false
 var dragging_offset: Vector2
 var flipped := false
+var selected := false setget set_selected
+
+func set_selected(val: bool) -> void:
+	selected = val
+	$ReferenceRect.visible = val
 
 func _ready() -> void:
 	texture = Global.get_texture_from_cards_pck(path)
+	$ReferenceRect.rect_size = rect_size
 
 func _process(delta: float) -> void:
 	if dragging:
