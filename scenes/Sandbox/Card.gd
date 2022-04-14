@@ -1,15 +1,18 @@
 extends TextureRect
 
+signal unhandled_input(event)
+
 const BACK := 'metw-back.jpg'
 const SITE_BACK := 'site-back.jpg'
+onready var player := $'/root/Main/Player'
 
 enum TYPE {
 	SITE,
 	OTHER,
 }
 
-export(String) var path := 'Wizards/SamGamgee.jpg'
-export(TYPE) var type := TYPE.OTHER
+export var path := 'Wizards/SamGamgee.jpg'
+export var type := TYPE.OTHER
 
 var dragging := false
 var dragging_offset: Vector2
@@ -18,7 +21,10 @@ var selected := false setget set_selected
 
 func set_selected(val: bool) -> void:
 	selected = val
-	$ReferenceRect.visible = val
+	if val:
+		highlight()
+	else:
+		remove_highlight()
 
 func _ready() -> void:
 	texture = Global.get_texture_from_cards_pck(path)
@@ -45,6 +51,7 @@ func _gui_input(event: InputEvent) -> void:
 	elif event.is_action_pressed('flip'):
 		flip()
 	else:
+		player._unhandled_input(event)
 		return
 	accept_event()
 
@@ -61,8 +68,9 @@ func send_to_back() -> void:
 	children.invert()
 	for node in children:
 		if node.get_global_rect().has_point(mousePos):
-			print(node.path)
+			remove_highlight()
 			node.grab_focus()
+			node.highlight()
 			break
 
 func flip() -> void:
@@ -73,8 +81,16 @@ func flip() -> void:
 		texture = Global.get_texture_from_cards_pck(path)
 	flipped = not flipped
 
+func highlight() -> void:
+	$ReferenceRect.visible = true
+
+func remove_highlight() -> void:
+	$ReferenceRect.visible = false
+
 func _on_Card_mouse_entered() -> void:
 	grab_focus()
+	highlight()
 
 func _on_Card_mouse_exited() -> void:
 	release_focus()
+	remove_highlight()
