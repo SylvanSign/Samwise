@@ -20,26 +20,6 @@ mouse_filter = 2
 
 [node name="Cards" type="Node" parent="."]
 
-[node name="Card" parent="Cards" instance=ExtResource( 1 )]
-rect_scale = Vector2( 0.5, 0.5 )
-
-[node name="Card2" parent="Cards" instance=ExtResource( 1 )]
-margin_left = 706.0
-margin_top = 155.0
-margin_right = 1126.0
-margin_bottom = 742.0
-path = "Wizards/AragornII.jpg"
-
-[node name="Card3" parent="Cards" instance=ExtResource( 1 )]
-margin_left = 346.0
-margin_top = 202.0
-margin_right = 766.0
-margin_bottom = 789.0
-path = "Wizards/Ford.jpg"
-
-[node name="Card4" parent="Cards" instance=ExtResource( 1 )]
-path = "Wizards/BoromirII.jpg"
-
 [node name="Card5" parent="Cards" instance=ExtResource( 1 )]
 margin_left = 706.0
 margin_top = 155.0

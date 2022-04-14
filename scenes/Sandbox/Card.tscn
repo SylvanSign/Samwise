@@ -17,6 +17,7 @@ margin_bottom = 40.0
 rect_min_size = Vector2( 420, 587 )
 mouse_filter = 2
 border_color = Color( 1, 1, 1, 1 )
+border_width = 5.0
 editor_only = false
 
 [connection signal="mouse_entered" from="." to="." method="_on_Card_mouse_entered"]

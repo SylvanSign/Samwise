@@ -77,6 +77,7 @@ config/windows_native_icon="res://icon.ico"
 [autoload]
 
 Global="*res://scenes/Global.gd"
+Events="*res://scenes/Events.gd"
 
 [debug]
 

@@ -4,6 +4,7 @@ signal unhandled_input(event)
 
 const BACK := 'metw-back.jpg'
 const SITE_BACK := 'site-back.jpg'
+onready var reference_rect := $ReferenceRect
 onready var player := $'/root/Main/Player'
 
 enum TYPE {
@@ -22,38 +23,27 @@ var selected := false setget set_selected
 func set_selected(val: bool) -> void:
 	selected = val
 	if val:
-		highlight()
+		highlight(Color.yellow)
 	else:
 		remove_highlight()
 
 func _ready() -> void:
 	texture = Global.get_texture_from_cards_pck(path)
-	$ReferenceRect.rect_size = rect_size
+	reference_rect.rect_size = rect_size
 
 func _process(delta: float) -> void:
 	if dragging:
 		rect_position = get_global_mouse_position() - dragging_offset
 
 func _gui_input(event: InputEvent) -> void:
-	if event.is_action_pressed('click'):
-		dragging = true
-		dragging_offset = get_global_mouse_position() - rect_position
-	elif event.is_action_released('click'):
-		dragging = false
-	elif event.is_action_pressed('rotate_left'):
-		rect_rotation -= 90
-	elif event.is_action_pressed('rotate_right'):
-		rect_rotation += 90
-	elif event.is_action_pressed('send_to_back'):
-		send_to_back()
-	elif event.is_action_pressed('bring_to_front'):
-		bring_to_front()
-	elif event.is_action_pressed('flip'):
-		flip()
-	else:
-		player._unhandled_input(event)
-		return
+	player._unhandled_input(event)
 	accept_event()
+
+func rotate_left() -> void:
+	rect_rotation -= 90
+
+func rotate_right() -> void:
+	rect_rotation += 90
 
 func bring_to_front() -> void:
 	var parent := get_parent()
@@ -81,16 +71,17 @@ func flip() -> void:
 		texture = Global.get_texture_from_cards_pck(path)
 	flipped = not flipped
 
-func highlight() -> void:
-	$ReferenceRect.visible = true
+func highlight(color := Color.white) -> void:
+	reference_rect.border_color = color
+	reference_rect.visible = true
 
 func remove_highlight() -> void:
-	$ReferenceRect.visible = false
+	reference_rect.visible = false
 
 func _on_Card_mouse_entered() -> void:
 	grab_focus()
-	highlight()
+	Events.emit_signal('card_hovered', self)
 
 func _on_Card_mouse_exited() -> void:
 	release_focus()
-	remove_highlight()
+	Events.emit_signal('card_left', self)
