@@ -2,8 +2,8 @@ extends Camera2D
 
 signal selection(rect)
 
-export(int) var speed := 1000
-export(float) var zoom_factor := 1.5
+export(int) var speed := 2000
+export(float) var zoom_factor := 1.05
 
 var panning := false
 var dragging := false
@@ -60,12 +60,33 @@ func global_selection_rect() -> Rect2:
 #	accept_event()
 
 func _unhandled_input(event: InputEvent) -> void:
-	# zoom in
-	if event.is_action_pressed('scroll_up'):
-		zoom /= zoom_factor
-	# zoom out
+	if event is InputEventMouseMotion:
+		var mouse_event := event as InputEventMouseMotion
+		var relative := mouse_event.relative
+		if panning:
+			relative = mouse_event.relative * speed * zoom * get_process_delta_time() / 4
+			position += relative
+			if select_start:
+				update()
+		if dragging:
+			call_on_focused_cards('move', [relative])
+	elif event.is_action_pressed('click'):
+		if hovered:
+			dragging = true
+		else:
+			selecting = true
+		select_start = get_global_mouse_position()
+	elif event.is_action_released('click'):
+		if selecting:
+			emit_signal('selection', global_selection_rect())
+			selecting = false
+			update()
+		else:
+			dragging = false
+	elif event.is_action_pressed('scroll_up'):
+		zoom /= zoom_factor # zoom in
 	elif event.is_action_pressed('scroll_down'):
-		zoom *= zoom_factor
+		zoom *= zoom_factor # zoom out
 	elif event.is_action_pressed('middle_click'):
 		panning = true
 	elif event.is_action_released('middle_click'):
@@ -80,26 +101,6 @@ func _unhandled_input(event: InputEvent) -> void:
 		call_on_focused_cards('bring_to_front')
 	elif event.is_action_pressed('flip'):
 		call_on_focused_cards('flip')
-	elif event is InputEventMouseMotion:
-		if panning:
-			position += event.relative * speed * zoom * get_process_delta_time()
-			if select_start:
-				update()
-		elif dragging:
-			call_on_focused_cards('move', [event.relative])
-	elif event.is_action_pressed('click'):
-		if hovered:
-			dragging = true
-		else:
-			selecting = true
-		select_start = get_global_mouse_position()
-	elif event.is_action_released('click'):
-		if selecting:
-			emit_signal('selection', global_selection_rect())
-			selecting = false
-			update()
-		else:
-			dragging = false
 	else:
 		return
 
