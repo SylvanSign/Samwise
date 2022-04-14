@@ -6,6 +6,7 @@ export(int) var speed := 1000
 export(float) var zoom_factor := 1.5
 
 var panning := false
+var dragging := false
 var selecting := false
 var select_start: Vector2
 var selected := {}
@@ -16,8 +17,8 @@ func _ready() -> void:
 	Events.connect('card_left', self, '_on_card_left')
 
 func _on_card_hovered(card: Node) -> void:
+	hovered = card
 	if not selected.has(card) and not selecting:
-		hovered = card
 		card.highlight()
 
 func _on_card_left(card: Node) -> void:
@@ -79,25 +80,33 @@ func _unhandled_input(event: InputEvent) -> void:
 		call_on_focused_cards('bring_to_front')
 	elif event.is_action_pressed('flip'):
 		call_on_focused_cards('flip')
-	elif panning and event is InputEventMouseMotion:
-		position += event.relative * speed * zoom * get_process_delta_time()
-		if select_start:
-			update()
+	elif event is InputEventMouseMotion:
+		if panning:
+			position += event.relative * speed * zoom * get_process_delta_time()
+			if select_start:
+				update()
+		elif dragging:
+			call_on_focused_cards('move', [event.relative])
 	elif event.is_action_pressed('click'):
-		selecting = true
+		if hovered:
+			dragging = true
+		else:
+			selecting = true
 		select_start = get_global_mouse_position()
 	elif event.is_action_released('click'):
 		if selecting:
 			emit_signal('selection', global_selection_rect())
 			selecting = false
 			update()
-#	else:
-#		return
-#
-#	get_tree().set_input_as_handled()
+		else:
+			dragging = false
+	else:
+		return
+
+	get_tree().set_input_as_handled()
 
 func call_on_focused_cards(method: String, args := []) -> void:
-	if hovered:
+	if hovered and not hovered in selected:
 		hovered.callv(method, args)
 	for card in selected:
 		card.callv(method, args)

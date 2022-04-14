@@ -15,8 +15,6 @@ enum TYPE {
 export var path := 'Wizards/SamGamgee.jpg'
 export var type := TYPE.OTHER
 
-var dragging := false
-var dragging_offset: Vector2
 var flipped := false
 var selected := false setget set_selected
 
@@ -31,13 +29,12 @@ func _ready() -> void:
 	texture = Global.get_texture_from_cards_pck(path)
 	reference_rect.rect_size = rect_size
 
-func _process(delta: float) -> void:
-	if dragging:
-		rect_position = get_global_mouse_position() - dragging_offset
-
 func _gui_input(event: InputEvent) -> void:
 	player._unhandled_input(event)
 	accept_event()
+
+func move(relative: Vector2) -> void:
+	rect_position += relative.rotated(get_rotation())
 
 func rotate_left() -> void:
 	rect_rotation -= 90
