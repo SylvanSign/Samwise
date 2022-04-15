@@ -30,11 +30,11 @@ func _ready() -> void:
 	reference_rect.rect_size = rect_size
 
 func _gui_input(event: InputEvent) -> void:
-	player._unhandled_input(event)
+	player._unandled_gui_input(event, get_rotation())
 	accept_event()
 
 func move(relative: Vector2) -> void:
-	rect_position += relative.rotated(get_rotation())
+	rect_position += relative
 
 func rotate_left() -> void:
 	rect_rotation -= 90

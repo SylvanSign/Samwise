@@ -19,13 +19,16 @@ func _ready() -> void:
 
 func _on_card_hovered(card: Node) -> void:
 	hovered = card
-	if not selected.has(card) and not selecting:
-		card.highlight()
+	if not selecting:
+		card.highlight(Color.white)
 
 func _on_card_left(card: Node) -> void:
 	hovered = null
-	if not (selected.has(card) or selecting):
-		card.remove_highlight()
+	if not selecting:
+		if selected.has(card):
+			card.highlight(Color.yellow)
+		else:
+			card.remove_highlight()
 
 func _process(delta: float) -> void:
 	var input := Input.get_vector('left', 'right', 'up', 'down')
@@ -59,6 +62,11 @@ func global_selection_rect() -> Rect2:
 #		player._unhandled_input(event)
 #		return
 #	accept_event()
+
+func _unandled_gui_input(event: InputEvent, rotation: float) -> void:
+	if event is InputEventMouseMotion:
+		event.relative = event.relative.rotated(rotation)
+	_unhandled_input(event)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
