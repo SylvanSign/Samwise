@@ -3,10 +3,11 @@ extends Camera2D
 signal selection(rect)
 
 export(int) var speed := 2000
-export(float) var zoom_factor := 1.05
+export(float) var zoom_factor := 1.5
 
 var panning := false
 var dragging := false
+var raised := false
 var selecting := false
 var select_start: Vector2
 var selected := {}
@@ -69,6 +70,9 @@ func _unhandled_input(event: InputEvent) -> void:
 			if select_start:
 				update()
 		if dragging:
+			if not raised:
+				call_on_focused_cards('raise')
+				raised = false
 			call_on_focused_cards('move', [relative])
 	elif event.is_action_pressed('click'):
 		if hovered:
@@ -83,6 +87,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			update()
 		else:
 			dragging = false
+			raised = false
 	elif event.is_action_pressed('scroll_up'):
 		zoom /= zoom_factor # zoom in
 	elif event.is_action_pressed('scroll_down'):
