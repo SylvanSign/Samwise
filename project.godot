@@ -53,6 +53,11 @@ _global_script_classes=[ {
 "class": "Preview",
 "language": "GDScript",
 "path": "res://scenes/DeckBuilder/Preview.gd"
+}, {
+"base": "TextureRect",
+"class": "SandboxCard",
+"language": "GDScript",
+"path": "res://scenes/Sandbox/Card.gd"
 } ]
 _global_script_class_icons={
 "Card": "",
@@ -63,7 +68,8 @@ _global_script_class_icons={
 "ExportCardnumPopup": "",
 "ImportCardnumPopup": "",
 "Map": "",
-"Preview": ""
+"Preview": "",
+"SandboxCard": ""
 }
 
 [application]

@@ -5,6 +5,8 @@ signal selection(rect)
 export(int) var speed := 2000
 export(float) var zoom_factor := 1.5
 
+onready var cards := $'../Cards'
+
 var panning := false
 var dragging := false
 var raised := false
@@ -52,17 +54,6 @@ func global_selection_rect() -> Rect2:
 	rect.end = get_global_mouse_position()
 	return rect
 
-#func _gui_input(event: InputEvent) -> void:
-#	if event.is_action_pressed('click'):
-#		dragging = true
-#		dragging_offset = get_global_mouse_position() - rect_position
-#	elif event.is_action_released('click'):
-#		dragging = false
-#	else:
-#		player._unhandled_input(event)
-#		return
-#	accept_event()
-
 func _unandled_gui_input(event: InputEvent, rotation: float) -> void:
 	if event is InputEventMouseMotion:
 		event.relative = event.relative.rotated(rotation)
@@ -79,9 +70,9 @@ func _unhandled_input(event: InputEvent) -> void:
 				update()
 		if dragging:
 			if not raised:
-				call_on_focused_cards('raise')
+				call_on_selected_and_hovered_cards('raise')
 				raised = false
-			call_on_focused_cards('move', [relative])
+			call_on_selected_and_hovered_cards('move', [relative])
 	elif event.is_action_pressed('click'):
 		if hovered:
 			dragging = true
@@ -105,22 +96,33 @@ func _unhandled_input(event: InputEvent) -> void:
 	elif event.is_action_released('middle_click'):
 		panning = false
 	elif event.is_action_pressed('rotate_left'):
-		call_on_focused_cards('rotate_left')
+		call_on_selected_and_hovered_cards('rotate_left')
 	elif event.is_action_pressed('rotate_right'):
-		call_on_focused_cards('rotate_right')
+		call_on_selected_and_hovered_cards('rotate_right')
 	elif event.is_action_pressed('send_to_back'):
-		call_on_focused_cards('send_to_back')
+		call_on_selected_and_hovered_cards('send_to_back', [], true)
 	elif event.is_action_pressed('bring_to_front'):
-		call_on_focused_cards('bring_to_front')
+		call_on_selected_and_hovered_cards('bring_to_front')
 	elif event.is_action_pressed('flip'):
-		call_on_focused_cards('flip')
+		call_on_selected_and_hovered_cards('flip')
 	else:
 		return
 
 	get_tree().set_input_as_handled()
 
-func call_on_focused_cards(method: String, args := []) -> void:
-	if hovered and not hovered in selected:
-		hovered.callv(method, args)
+func call_on_selected_and_hovered_cards(method: String, args := [], can_change_hover := false) -> void:
 	for card in selected:
 		card.callv(method, args)
+	if hovered and not hovered in selected:
+		hovered.callv(method, args)
+		if can_change_hover:
+			var mousePos := get_global_mouse_position()
+			var children := cards.get_children()
+			children.invert()
+			for c in children:
+				var card := c as SandboxCard
+				if card.get_rect_rotated().has_point(mousePos):
+					card.highlight()
+					hovered.remove_highlight()
+					hovered = card
+					break

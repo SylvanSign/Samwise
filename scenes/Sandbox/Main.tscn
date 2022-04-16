@@ -14,6 +14,7 @@ __meta__ = {
 }
 
 [node name="Map" type="TextureRect" parent="."]
+visible = false
 margin_right = 40.0
 margin_bottom = 40.0
 mouse_filter = 2
@@ -23,21 +24,45 @@ __meta__ = {
 
 [node name="Cards" type="Node" parent="."]
 
-[node name="Card5" parent="Cards" instance=ExtResource( 1 )]
-margin_left = 706.0
-margin_top = 155.0
-margin_right = 1126.0
-margin_bottom = 742.0
-path = "Wizards/Sting.jpg"
-
-[node name="Card6" parent="Cards" instance=ExtResource( 1 )]
-margin_left = 346.0
-margin_top = 202.0
-margin_right = 766.0
-margin_bottom = 789.0
-
-[node name="Card7" parent="Cards" instance=ExtResource( 1 )]
+[node name="Rivendell" parent="Cards" instance=ExtResource( 1 )]
 path = "Wizards/Rivendell.jpg"
+type = 0
+
+[node name="Sam" parent="Cards" instance=ExtResource( 1 )]
+margin_left = 172.0
+margin_top = 219.0
+margin_right = 592.0
+margin_bottom = 806.0
+type = 0
+
+[node name="OneRing" parent="Cards" instance=ExtResource( 1 )]
+margin_left = 464.0
+margin_right = 884.0
+path = "Wizards/TheOneRing.jpg"
+type = 0
+
+[node name="Gollum" parent="Cards" instance=ExtResource( 1 )]
+margin_left = 733.0
+margin_top = 242.0
+margin_right = 1153.0
+margin_bottom = 829.0
+path = "Wizards/Gollum.jpg"
+type = 0
+
+[node name="Alatar" parent="Cards" instance=ExtResource( 1 )]
+margin_left = 1016.0
+margin_top = 7.0
+margin_right = 1436.0
+margin_bottom = 594.0
+path = "Wizards/Alatar.jpg"
+type = 0
+
+[node name="Slayer" parent="Cards" instance=ExtResource( 1 )]
+margin_left = 1282.0
+margin_top = 299.0
+margin_right = 1702.0
+margin_bottom = 886.0
+path = "Wizards/Slayer.jpg"
 type = 0
 
 [node name="Player" parent="." instance=ExtResource( 2 )]

@@ -1,4 +1,5 @@
 extends TextureRect
+class_name SandboxCard
 
 signal unhandled_input(event)
 
@@ -33,14 +34,29 @@ func _gui_input(event: InputEvent) -> void:
 	player._unandled_gui_input(event, get_rotation())
 	accept_event()
 
+func get_rect_rotated() -> Rect2:
+	return _get_rect_rotated_helper('get_rect', rect_position)
+
+func get_global_rect_rotated() -> Rect2:
+	return _get_rect_rotated_helper('get_global_rect', rect_global_position)
+
+func _get_rect_rotated_helper(default: String, pos: Vector2) -> Rect2:
+	if fmod(rect_rotation, 180) == 0:
+		return call(default)
+	else:
+		var pos_diff := (rect_size.y - rect_size.x) / 2
+		var new_pos := pos + Vector2(-pos_diff, pos_diff)
+		var new_size := Vector2(rect_size.y, rect_size.x)
+		return Rect2(new_pos, new_size)
+
 func move(relative: Vector2) -> void:
 	rect_position += relative
 
 func rotate_left() -> void:
-	rect_rotation -= 90
+	rect_rotation = fmod(rect_rotation - 90, 360)
 
 func rotate_right() -> void:
-	rect_rotation += 90
+	rect_rotation = fmod(rect_rotation + 90, 360)
 
 func bring_to_front() -> void:
 	var parent := get_parent()
@@ -49,16 +65,6 @@ func bring_to_front() -> void:
 func send_to_back() -> void:
 	var parent := get_parent()
 	parent.move_child(self, 0)
-	# TODO is there a better way to make "cards above this one" grab focus?
-	var mousePos =  get_global_mouse_position()
-	var children = get_parent().get_children()
-	children.invert()
-	for node in children:
-		if node.get_global_rect().has_point(mousePos):
-			remove_highlight()
-			node.grab_focus()
-			node.highlight()
-			break
 
 func flip() -> void:
 	if flipped:
@@ -76,9 +82,7 @@ func remove_highlight() -> void:
 	reference_rect.visible = false
 
 func _on_Card_mouse_entered() -> void:
-	grab_focus()
 	Events.emit_signal('card_hovered', self)
 
 func _on_Card_mouse_exited() -> void:
-	release_focus()
 	Events.emit_signal('card_left', self)
