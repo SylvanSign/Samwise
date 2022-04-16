@@ -113,8 +113,11 @@ func _unhandled_input(event: InputEvent) -> void:
 func call_on_selected_and_hovered_cards(method: String, args := [], can_change_hover := false) -> void:
 	for card in selected:
 		card.callv(method, args)
-	if hovered and not hovered in selected:
-		hovered.callv(method, args)
+
+	if hovered:
+		if not hovered in selected:
+			hovered.callv(method, args)
+
 		if can_change_hover:
 			var mousePos := get_global_mouse_position()
 			var children := cards.get_children()
