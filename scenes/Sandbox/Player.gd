@@ -34,7 +34,10 @@ func _on_card_left(card: Node) -> void:
 
 func _process(delta: float) -> void:
 	var input := Input.get_vector('left', 'right', 'up', 'down')
-	position += input * speed * zoom * delta
+	var relative := input * speed * zoom * delta
+	position += relative
+	if relative != Vector2.ZERO:
+		call_on_selected_and_hovered_cards('move', [relative])
 	if selecting:
 		update()
 
